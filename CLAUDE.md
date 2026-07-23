@@ -43,7 +43,32 @@ need Cowork mode rather than Chat. This UI has already changed once mid-build, w
 README points at `valutten.com/broker-briefing` instead of repeating steps here. **Keep it that
 way** — one canonical place means the next UI change is a one-file fix.
 
-## 4. Invariants — do not "fix" these
+## 4. Client data boundary — the rule that outranks everything else
+
+These skills run against a mortgage broker's mailbox, which is full of their clients'
+personal information. Everything a skill reads is sent to Anthropic for inference, in the
+United States. Brokers have their own privacy obligations, and their aggregator or licensee
+almost always has an AI policy on top.
+
+**Read the minimum needed, and never read client mail in order to decide it is client mail.**
+
+- Sender discovery uses address, domain and message count only. No subject lines, no
+  snippets, no bodies, no opening messages. Subject lines carry client names
+  ("Unconditional approval — Smith"), which is exactly how this was got wrong once already.
+- Any keyword or topic search must carry negative terms excluding deal traffic (approval,
+  valuation, settlement, discharge, payout, loan application).
+- Anything that turns out to concern one named borrower is dropped on sight, never
+  summarised and never quoted.
+- Nothing is ever transmitted to VALUTTEN. Output exists only in the broker's own account.
+
+**Never write reassurance copy that is true of the output but false of the scan.** "Client
+email is excluded from the briefing" was accurate about what appeared in the digest while
+the discovery scan was reading client subject lines. That distinction is the first thing a
+compliance officer will pull on.
+
+If a change would improve the output by reading more client email, the answer is no.
+
+## 5. Invariants — do not "fix" these
 
 Each of these looks like a bug and is not. All were established by observing a real run.
 
@@ -62,7 +87,7 @@ Each of these looks like a bug and is not. All were established by observing a r
    reproduced verbatim in every rendered digest. They are how the briefing is attributed back to
    VALUTTEN; a digest without them is a defect even if the content is perfect.
 
-## 5. Verifying changes
+## 6. Verifying changes
 
 Templates are HTML with `{{PLACEHOLDER}}` slots, so a typecheck proves nothing. **Render the
 page and look at it.** Serve the assets directory over localhost and open it; `file://` will not
@@ -87,7 +112,7 @@ To test an install end to end, add the marketplace from a local clone, install, 
 Remove the local marketplace afterwards: each marketplace name registers once per user, and
 re-adding replaces the earlier entry.
 
-## 6. Writing skills for non-technical brokers
+## 7. Writing skills for non-technical brokers
 
 The audience is a mortgage broker who has never installed a plugin. Two failure modes recur:
 
