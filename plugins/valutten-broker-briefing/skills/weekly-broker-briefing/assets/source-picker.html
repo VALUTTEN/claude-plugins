@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--
+  Source picker — used during SETUP (Step 0) so the broker can select which
+  discovered senders belong in their weekly briefing.
+
+  HOW TO POPULATE
+  - For each discovered sender, insert one <label class="row"> block into the
+    matching group's <div class="rows">. Copy the row template in the comment below.
+  - Pre-tick (checked) the senders you recommend including; leave client/noise
+    senders un-ticked (they live under the "Likely excluded" group).
+  - Fill {{DISCOVERY_WINDOW}} in the header.
+  - Delete any group that has no rows.
+  - Self-contained: inline CSS/JS only. The "Copy selected senders" button copies a
+    comma-separated list of the ticked senders' addresses/domains to the clipboard,
+    which the broker pastes back into the chat. No download / re-upload needed.
+
+  ROW TEMPLATE (copy per sender):
+    <label class="row">
+      <input type="checkbox" value="SENDER_ADDRESS_OR_DOMAIN" checked>
+      <span class="who">DISPLAY NAME &lt;sender@domain&gt;</span>
+      <span class="count">N emails</span>
+      <span class="eg">e.g. "example subject line"</span>
+    </label>
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choose your briefing sources</title>
+<style>
+  :root{--ink:#141821;--muted:#5b6472;--line:#e6e9ef;--bg:#f6f7f9;--brand:#1f4fd8;--soft:#eaf0ff;--warn:#b25e00}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:820px;margin:0 auto;padding:26px 20px 90px}
+  h1{font-size:23px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .group{margin:22px 0}
+  .group > h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--brand);
+    border-left:4px solid var(--brand);padding-left:10px;margin:0 0 4px}
+  .group.excluded > h2{color:var(--warn);border-color:var(--warn)}
+  .hint{color:var(--muted);font-size:12px;margin:0 0 10px;padding-left:14px}
+  .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px;margin:0 0 8px;cursor:pointer}
+  .row input{width:18px;height:18px;flex:0 0 auto}
+  .who{font-weight:600;flex:1 1 auto;min-width:180px}
+  .count{font-size:12px;color:var(--muted);background:#f0f2f6;border-radius:999px;padding:2px 9px}
+  .eg{font-size:12px;color:var(--muted);flex-basis:100%;padding-left:28px;font-style:italic}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);
+    padding:12px 20px;display:flex;gap:12px;align-items:center;justify-content:center}
+  button{background:var(--brand);color:#fff;border:0;border-radius:9px;padding:11px 18px;
+    font-size:15px;font-weight:600;cursor:pointer}
+  button.sec{background:#eef1f6;color:var(--ink)}
+  .out{max-width:820px;margin:16px auto 0;padding:0 20px}
+  textarea{width:100%;min-height:70px;border:1px solid var(--line);border-radius:9px;padding:10px;font:13px monospace}
+  .ok{color:#0b7a5b;font-size:13px;margin-left:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Choose your weekly briefing sources</h1>
+  <p class="sub">Discovered from your inbox over the last {{DISCOVERY_WINDOW}}. Ticked = included.
+  Untick anything you don't want, tick anything under "Likely excluded" you do want,
+  then click <strong>Copy selected senders</strong> and paste the list back into the chat.</p>
+
+  <div class="group"><h2>Lenders &amp; Banks</h2>
+    <p class="hint">Rate and credit-policy sources — usually the core of the briefing.</p>
+    <div class="rows"><!-- rows --></div>
+  </div>
+
+  <div class="group"><h2>Aggregator / Loan Market / Licensee</h2>
+    <p class="hint">Group comms, platform/compliance, commission and panel updates.</p>
+    <div class="rows"><!-- rows --></div>
+  </div>
+
+  <div class="group"><h2>Industry Media</h2>
+    <p class="hint">Momentum Media, The Adviser, Mortgage Business, Broker Daily, MPA, etc.</p>
+    <div class="rows"><!-- rows --></div>
+  </div>
+
+  <div class="group"><h2>Events &amp; Regulatory</h2>
+    <p class="hint">Awards nights, conferences, PD days, webinars; APRA/ASIC/gov.</p>
+    <div class="rows"><!-- rows --></div>
+  </div>
+
+  <div class="group excluded"><h2>Likely excluded (client / deal / noise)</h2>
+    <p class="hint">Mostly deal-specific traffic — approvals, valuations, settlements —
+    or marketing/personal. Left un-ticked; tick any you actually want to keep.</p>
+    <div class="rows"><!-- rows --></div>
+  </div>
+</div>
+
+<div class="out">
+  <textarea id="result" readonly placeholder="Your selected senders will appear here after you click the button."></textarea>
+  <span id="ok" class="ok"></span>
+</div>
+
+<div class="bar">
+  <button onclick="copySel()">Copy selected senders</button>
+  <button class="sec" onclick="toggleAll(true)">Select all</button>
+  <button class="sec" onclick="toggleAll(false)">Clear all</button>
+</div>
+
+<script>
+  function selected(){
+    return Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(c=>c.value);
+  }
+  function copySel(){
+    var list = selected().join(', ');
+    var ta = document.getElementById('result');
+    ta.value = list;
+    ta.select();
+    try{ navigator.clipboard.writeText(list); }catch(e){ document.execCommand('copy'); }
+    document.getElementById('ok').textContent = selected().length + ' senders copied — paste them into the chat.';
+  }
+  function toggleAll(v){
+    document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=v);
+  }
+</script>
+</body>
+</html>

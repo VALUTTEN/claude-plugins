@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--
+  Weekly Broker Briefing — HTML shell (editorial, scannable bullet list).
+
+  HOW TO USE THIS TEMPLATE
+  - Replace the {{PLACEHOLDERS}} with real content.
+  - Under each category <ul class="items">, repeat the <li class="item"> block
+    once per kept item. Copy the item template in the comment below.
+  - Each item is a BULLET: a bold clickable subject, a one-line summary, and a
+    source link. Keep summaries to a single line so the page stays skimmable.
+  - The subject links to the primary source (document/website if there is one,
+    otherwise the original email). Add the optional "· Email" secondary link only
+    when the primary link is a document/page and the email is also worth opening.
+  - Delete any category <section> that has no items. Update the {{N}} count in each
+    heading to the number of items actually kept in that section.
+  - QUIET WEEK: if nothing was kept, delete the standfirst and every category
+    section, and use the .quiet block near the bottom instead.
+
+  DO NOT REMOVE (branding is load-bearing, see SKILL.md Step 6)
+  - The <header class="masthead"> block, including the logo <img>.
+  - The <footer class="colophon"> block, including the valutten.com link and its
+    utm_* query parameters.
+  These two blocks are how the briefing is attributed back to VALUTTEN. Reproduce
+  them exactly as written. Do not restyle, reword, relocate or "tidy" them.
+
+  The odd-looking font styling on the .masthead img rule is deliberate: it makes the
+  alt text render as the VALUTTEN wordmark when an email client blocks remote images.
+  Leave it in place.
+
+  Self-contained: inline CSS only. The masthead logo is the single external request;
+  keep it that way so the page renders anywhere and can be emailed or hosted as-is.
+-->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Broker Briefing — {{WEEK_RANGE}}</title>
+<style>
+  :root{
+    --paper:#fffdfa;
+    --desk:#e8e4dc;
+    --ink:#14181f;
+    --ink-soft:#4b5462;
+    --ink-faint:#8b94a3;
+    --rule:#e2ddd4;
+    --hair:#efebe3;
+    --night:#0f172a;
+    --night-2:#161c2b;
+    --signal:#2563eb;
+    --eff:#a35b00;
+    --serif:"Iowan Old Style","Hoefler Text",Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;
+    --sans:"Avenir Next","Avenir","Segoe UI","Helvetica Neue",Helvetica,sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--desk);
+    background-image:radial-gradient(1200px 600px at 50% -10%, rgba(15,23,42,.06), transparent 70%);
+    color:var(--ink);
+    font:16px/1.55 var(--sans);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  .sheet{
+    max-width:880px;margin:0 auto;background:var(--paper);
+    box-shadow:0 1px 2px rgba(20,24,31,.05),0 18px 46px -18px rgba(20,24,31,.28);
+    overflow:hidden;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    background:var(--night);
+    background-image:linear-gradient(180deg,#182034 0%,var(--night) 62%,#0b1120 100%);
+    padding:22px 34px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    border-bottom:3px solid var(--signal);
+  }
+  /* The logo JPG carries its own baked-in dark ground, so its edge is always
+     visible against the band. It is framed as a deliberate plate rather than
+     blended. The font styling is the image-blocked fallback — see the comment
+     at the top of this file. */
+  .masthead img{
+    display:block;height:34px;width:auto;
+    border:1px solid rgba(226,235,250,.14);
+    border-radius:4px;
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 6px 18px -8px rgba(0,0,0,.65);
+    font:700 20px/34px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:#f2f5fa;
+  }
+  .masthead .kicker{
+    text-align:right;
+    font:10px/1.5 var(--sans);letter-spacing:.24em;text-transform:uppercase;
+    color:#7e8ba3;
+  }
+  .masthead .kicker strong{display:block;color:#dbe3f1;font-weight:600;letter-spacing:.22em}
+
+  /* ---------- dateline ---------- */
+  .dateline{
+    padding:30px 34px 0;
+    display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;
+  }
+  .dateline h1{font:400 34px/1.12 var(--serif);margin:0;letter-spacing:-.01em}
+  .dateline h1 em{font-style:italic;color:var(--ink-soft)}
+  .issue{
+    font:10px/1.7 var(--sans);letter-spacing:.2em;text-transform:uppercase;
+    color:var(--ink-faint);text-align:right;white-space:nowrap;
+  }
+  .issue b{color:var(--ink-soft);font-weight:600}
+  .dateline-rule{margin:20px 34px 0;height:1px;background:var(--rule)}
+
+  /* ---------- standfirst (top of mind) ---------- */
+  .standfirst{padding:26px 34px 0}
+  .standfirst h2{
+    font:10px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;
+    color:var(--signal);margin:0 0 14px;font-weight:700;
+  }
+  .standfirst ol{margin:0;padding:0;list-style:none;counter-reset:tom}
+  .standfirst li{
+    counter-increment:tom;position:relative;padding:11px 0 12px 42px;
+    border-bottom:1px solid var(--hair);
+    font:400 18.5px/1.45 var(--serif);color:#20262f;
+  }
+  .standfirst li:last-child{border-bottom:0}
+  .standfirst li:before{
+    content:counter(tom,decimal-leading-zero);
+    position:absolute;left:0;top:15px;
+    font:600 10px/1 var(--sans);letter-spacing:.1em;color:var(--ink-faint);
+  }
+
+  /* ---------- categories ---------- */
+  .cat{padding:0 34px;margin-top:34px}
+  .cat > h2{
+    display:flex;align-items:center;gap:14px;
+    font:700 10px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink);margin:0 0 4px;
+  }
+  .cat > h2:after{content:"";flex:1;height:1px;background:var(--rule)}
+  .cat > h2 .count{font-weight:400;color:var(--ink-faint);letter-spacing:.14em}
+
+  ul.items{list-style:none;margin:0;padding:0}
+  li.item{padding:15px 0;border-bottom:1px solid var(--hair)}
+  li.item:last-child{border-bottom:0}
+  .subject{font:700 17px/1.35 var(--serif);letter-spacing:-.002em;margin:0}
+  .subject a{
+    color:var(--ink);text-decoration:none;
+    background-image:linear-gradient(var(--signal),var(--signal));
+    background-size:0 1px;background-repeat:no-repeat;background-position:0 100%;
+    transition:background-size .28s cubic-bezier(.22,1,.36,1),color .28s;
+  }
+  .subject a:hover{color:var(--signal);background-size:100% 1px}
+  .summary{margin:5px 0 0;color:var(--ink-soft);font-size:14.5px;line-height:1.5}
+  .meta{
+    margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:0 10px;
+    font:10px/1.6 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+  }
+  .meta .src{color:var(--signal);text-decoration:none;font-weight:600;letter-spacing:.14em}
+  .meta .src:hover{text-decoration:underline}
+  .meta .sep{color:#cfc9bf}
+  .meta .eff{color:var(--eff);font-weight:700}
+
+  /* ---------- quiet week ---------- */
+  .quiet{
+    margin:30px 34px 0;padding:34px 30px;text-align:center;
+    border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  }
+  .quiet p{margin:0;font:400 20px/1.5 var(--serif);color:#20262f}
+  .quiet span{
+    display:block;margin-top:12px;
+    font:10px/1.7 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);
+  }
+
+  /* ---------- colophon ---------- */
+  .colophon{
+    margin-top:40px;background:var(--night);
+    background-image:linear-gradient(180deg,#0c1320 0%,var(--night-2) 100%);
+    padding:26px 34px 28px;text-align:center;
+  }
+  .colophon .mark{
+    font:700 15px/1 var(--sans);letter-spacing:.34em;color:#eef2f9;text-transform:uppercase;
+  }
+  .colophon .line{
+    margin:12px auto 0;max-width:520px;
+    font:12.5px/1.65 var(--sans);color:#8b97ad;
+  }
+  .colophon a.cta{
+    display:inline-block;margin-top:16px;
+    font:700 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;
+    color:#dbe3f1;text-decoration:none;
+    border:1px solid rgba(219,227,241,.28);border-radius:2px;padding:11px 20px;
+    transition:border-color .25s,color .25s,background-color .25s;
+  }
+  .colophon a.cta:hover{border-color:#8fb3ff;color:#fff;background:rgba(37,99,235,.22)}
+  .colophon .fine{
+    margin-top:18px;font:10px/1.7 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#5c687d;
+  }
+
+  @media (max-width:640px){
+    .masthead{padding:16px 20px;flex-direction:column;align-items:flex-start;gap:14px}
+    .masthead .kicker{text-align:left}
+    .dateline{padding:24px 20px 0}
+    .dateline h1{font-size:27px}
+    .issue{text-align:left;white-space:normal}
+    .dateline-rule{margin:16px 20px 0}
+    .standfirst,.cat{padding-left:20px;padding-right:20px}
+    .quiet{margin-left:20px;margin-right:20px}
+    .colophon{padding:24px 20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- DO NOT REMOVE — see comment at top of file -->
+  <header class="masthead">
+    <img src="https://app.valutten.com/valutten-logo.jpg" alt="VALUTTEN" height="34">
+    <div class="kicker">
+      <strong>Broker Briefing</strong>
+      Policy · Rates · Industry
+    </div>
+  </header>
+
+  <div class="dateline">
+    <h1>Week of <em>{{WEEK_RANGE}}</em></h1>
+    <div class="issue">
+      Issue <b>{{ISSUE_NUMBER}}</b><br>
+      {{GENERATED_DATE}}<br>
+      Prepared for <b>{{BROKER_NAME}}</b>
+    </div>
+  </div>
+  <div class="dateline-rule"></div>
+
+  <!-- TOP OF MIND: the 2–3 biggest items of the week. Delete if nothing stood out. -->
+  <div class="standfirst">
+    <h2>Top of mind</h2>
+    <ol>
+      <li>{{TOP_ITEM_1}}</li>
+      <li>{{TOP_ITEM_2}}</li>
+      <li>{{TOP_ITEM_3}}</li>
+    </ol>
+  </div>
+
+  <!--
+    CATEGORY SECTIONS. Keep only the ones with content; delete the rest.
+    ITEM template (copy per bullet):
+
+    <li class="item">
+      <p class="subject"><a href="{{PRIMARY_SOURCE_URL}}">{{SUBJECT}}</a></p>
+      <p class="summary">{{ONE_LINE_SUMMARY}}</p>
+      <div class="meta">
+        <a class="src" href="{{PRIMARY_SOURCE_URL}}">Source &#8599;</a>
+        <span class="sep">·</span><a class="src" href="{{EMAIL_URL}}">Email</a>
+            // optional secondary; omit this and the preceding separator if the primary IS the email
+        <span class="sep">·</span><span>{{SOURCE_NAME}}, {{DATE}}</span>
+        <span class="sep">·</span><span class="eff">Effective {{EFFECTIVE_DATE}}</span>
+            // omit this and its separator if there is no effective date
+      </div>
+    </li>
+  -->
+
+  <section class="cat"><h2>Rate Changes <span class="count">{{N}}</span></h2>
+    <ul class="items"><!-- items --></ul>
+  </section>
+
+  <section class="cat"><h2>Credit &amp; Lending Policy <span class="count">{{N}}</span></h2>
+    <ul class="items"><!-- items --></ul>
+  </section>
+
+  <section class="cat"><h2>Regulatory &amp; Government <span class="count">{{N}}</span></h2>
+    <ul class="items"><!-- items --></ul>
+  </section>
+
+  <section class="cat"><h2>Lender Service &amp; Process <span class="count">{{N}}</span></h2>
+    <ul class="items"><!-- items --></ul>
+  </section>
+
+  <section class="cat"><h2>Aggregator &amp; Licensee <span class="count">{{N}}</span></h2>
+    <ul class="items"><!-- items --></ul>
+  </section>
+
+  <section class="cat"><h2>Industry News &amp; Events <span class="count">{{N}}</span></h2>
+    <ul class="items"><!-- items --></ul>
+  </section>
+
+  <!-- QUIET WEEK fallback. If nothing was kept, delete the standfirst and every
+       category section above, and use this block instead:
+
+  <div class="quiet">
+    <p>A quiet week. Nothing landed from your sources that changes how you write a loan.</p>
+    <span>{{SEEN}} items seen · 0 kept · next briefing {{NEXT_BRIEFING_DATE}}</span>
+  </div>
+  -->
+
+  <!-- DO NOT REMOVE — see comment at top of file. Keep the utm_* parameters intact. -->
+  <footer class="colophon">
+    <div class="mark">Valutten</div>
+    <p class="line">
+      Built from your own Google Workspace inbox. Client and deal-specific email is
+      excluded by design, so nothing about a named borrower appears here.
+    </p>
+    <a class="cta" href="https://valutten.com/?utm_source=broker-briefing&amp;utm_medium=plugin&amp;utm_campaign=weekly-digest">See your commissions in one place &#8599;</a>
+    <div class="fine">Weekly Broker Briefing · Issue {{ISSUE_NUMBER}}</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

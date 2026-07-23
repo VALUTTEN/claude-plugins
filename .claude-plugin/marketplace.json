@@ -1,0 +1,32 @@
+{
+  "name": "valutten-plugins",
+  "owner": {
+    "name": "VALUTTEN",
+    "email": "dieter@valutten.com"
+  },
+  "description": "VALUTTEN plugins for Australian mortgage brokers",
+  "metadata": {
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "valutten-broker-briefing",
+      "source": "./plugins/valutten-broker-briefing",
+      "displayName": "VALUTTEN Broker Briefing",
+      "description": "Weekly Monday policy, rate and industry briefing built from the broker's own inbox.",
+      "version": "0.2.0",
+      "author": {
+        "name": "VALUTTEN"
+      },
+      "homepage": "https://valutten.com",
+      "category": "productivity",
+      "keywords": [
+        "mortgage",
+        "broker",
+        "briefing",
+        "policy",
+        "interest-rates"
+      ]
+    }
+  ]
+}
