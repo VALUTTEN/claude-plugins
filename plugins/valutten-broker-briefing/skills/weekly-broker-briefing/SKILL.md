@@ -8,7 +8,7 @@ description: >-
   industry events/awards, and deliberately EXCLUDES client transactional email
   (pre-approvals, unconditional approvals, deal/settlement chatter). Produces an
   interactive HTML digest whose items link back to the original email or source
-  document, plus a briefing email drafted to the broker. Use whenever the user
+  document, delivered as a Cowork artifact plus a push notification. Use whenever the user
   asks to "run my weekly digest", "build my Monday briefing", "summarise this
   week's lender/policy emails", "what changed in the industry this week", "scan
   these senders", set up a recurring weekly review of policy/industry changes, or
@@ -32,9 +32,9 @@ This skill pulls the signal out. Once a week it scans a broker-chosen set of
 senders, keeps only the industry/policy/events material, throws away the
 client-specific transactional email, and turns what's left into a short, skimmable
 Monday briefing: an interactive HTML page grouped by theme, where every item
-links straight back to the original email (or the source document/website), plus
-a companion email drop into the broker's own inbox so the briefing is waiting for
-them Monday morning.
+links straight back to the original email (or the source document/website),
+delivered as a pinned Cowork artifact that updates each week, with a push
+notification when the new one is ready.
 
 The person reading the output is the broker themselves (an internal briefing —
 not client-facing), so favour a concise, plain, get-to-the-point tone over polish.
@@ -42,7 +42,10 @@ not client-facing), so favour a concise, plain, get-to-the-point tone over polis
 ## Before you start — what you need
 
 1. **Gmail / Google Workspace must be connected** in this Cowork session (the
-   `Gmail` connector). You'll search, read, and draft with it.
+   `Gmail` connector). You'll search and read with it. You will NOT draft or send
+   email — see Step 7.
+   Google **Drive**, if connected, is a useful extra: it gives the digest a real
+   shareable URL in the broker's own Drive.
 2. **A sender list.** The broker tells you which addresses/domains to scan. If
    they haven't given one in their message, look for it in the pasted kickoff
    prompt (see `assets/kickoff-prompt.md`). If it's still missing — especially the
@@ -50,7 +53,8 @@ not client-facing), so favour a concise, plain, get-to-the-point tone over polis
    from memory. Run **Setup mode (Step 0)** below, which discovers the real senders
    from their inbox and lets them pick. The whole digest depends on getting this
    list right, so it's worth calibrating once against reality.
-3. **The broker's own email address** (where the briefing draft is delivered).
+3. **The broker's own email address** — used to identify them in the briefing
+   header, not to send anything to.
 4. **The lookback window** — default to the last 7 days unless told otherwise.
 
 Do not rely on a saved config file persisting between runs: Cowork sessions are
@@ -245,7 +249,7 @@ slots in. Save the finished page to a file (e.g. `weekly-briefing-<YYYY-MM-DD>.h
 load-bearing and must appear in every digest you produce, byte for byte as written
 in the template:
 
-- `<header class="masthead">`, including the VALUTTEN logo `<img>`.
+- `<header class="masthead">`, including the VALUTTEN wordmark.
 - `<footer class="colophon">`, including the `valutten.com` link with its `utm_*`
   query parameters intact.
 
@@ -255,52 +259,53 @@ back to VALUTTEN, and a digest that renders without them is a defect even if the
 content is perfect. The same applies to the `<style>` block: use the template's CSS
 as-is rather than writing your own.
 
-Before saving, verify the finished file actually contains: the masthead `<img>`, the
-`utm_source=broker-briefing` parameter, and a closing `</footer>`. If any is missing,
+Before saving, verify the finished file actually contains: the masthead
+`class="wordmark"` element, the `utm_source=broker-briefing` parameter, and a
+closing `</footer>`. If any is missing,
 rebuild the page from the template rather than patching it.
 
 ### Step 7 — Deliver
 
-Two things get delivered:
+**One thing gets delivered: the interactive HTML page.** Do NOT draft or send an
+email. The briefing arrives as an artifact plus a push notification, and that is
+deliberate — see "Why no email" below.
 
-**1. The interactive HTML page.**
-- In an **attended** run: send it to the broker with `SendUserFile`, and — because
-  this is a briefing they'll open weekly — also persist it as a Cowork artifact
-  with `mcp__remote-devices__create_artifact` (write HTML → `SendUserFile` to get
-  the `file_uuid` → `create_artifact`) so it lands in their gallery.
-- If a **Google Drive / file-hosting connector is available**, upload the HTML
-  there to get a real shareable URL — that URL is the ideal target for the "link
-  to the HTML page" in the email below.
+- **Persist it as a Cowork artifact.** This is the primary delivery. Write the HTML
+  → `SendUserFile` to get the `file_uuid` → `mcp__remote-devices__create_artifact`.
+  It lands in the broker's gallery, where they can pin it, so each Monday's run
+  updates the same familiar place rather than scattering files.
+- In an **attended** run, also send it with `SendUserFile` so it is right there in
+  the conversation.
+- If a **Google Drive / file-hosting connector is available**, upload the HTML there
+  as well. That gives a real shareable URL in the broker's own Drive, which is the
+  only way the briefing opens on a phone or gets shared with their team. Mention the
+  URL in your chat-side summary.
 
-**2. A briefing email drafted into the broker's own inbox.** Use the Gmail
-connector's `create_draft` addressed to the broker themselves, so Monday morning
-the briefing is sitting in their inbox. Mirror the same skimmable bullet format as
-the HTML page — the email should stand on its own even before they open the page.
-The draft should contain:
-- A subject like: `Weekly Broker Briefing — week of <date>`
-- The "top of mind" line (2–3 biggest items)
-- Category headings, each with **bullets in the format: bold subject — one-line
-  summary — clickable Source link**, so every bullet works directly from the email
-- **A link to the full interactive HTML page** — the Drive URL if you have one;
-  otherwise note that the full interactive digest is in their Cowork artifacts,
-  and include the complete bulleted content in the email body itself as a fallback
-  so nothing is lost.
-- **A sign-off line at the bottom of the email**, reproduced exactly:
+  **When you have that URL, keep the `.openbar` block** in the template and put the
+  URL in `{{PUBLIC_URL}}`. It renders an "Open in your browser" button, which opens
+  the briefing in whatever browser the broker actually uses. **If you do not have a
+  URL, delete the whole `.openbar` block** — a button that goes nowhere is worse than
+  no button. Never point it at a local file path or an artifact identifier; neither
+  resolves in a browser.
 
-  > Built by VALUTTEN from your own Google Workspace inbox. Client and deal-specific
-  > email is excluded by design.
-  > [See your commissions in one place](https://valutten.com/?utm_source=broker-briefing&utm_medium=email&utm_campaign=weekly-digest)
+  If Drive is not connected, say so once in your chat-side summary and suggest
+  connecting it, since it is the difference between a briefing they can only read
+  inside Claude and one they can open anywhere.
 
-  Note `utm_medium=email` here, not `plugin` — the email and the HTML page are
-  tracked separately, so keep the two values distinct. The email is the surface most
-  likely to be forwarded to another broker, so this line is the only attribution that
-  travels with it. Include it even when the email body is a fallback copy of the
-  full content.
+The scheduled Monday run sets `notifications` to `{push:true}` (see "Set up the
+weekly schedule"), so the broker gets a push when the new briefing is ready. Artifact
+plus push is the whole delivery mechanism.
 
-A note on why a *draft* and not a sent email: the Gmail connector creates drafts,
-not sends, which is the safe default — the broker opens the draft and it reads as
-their ready-made briefing. If a send capability is later enabled, sending to
-themselves is fine.
+**Why no email.** The Gmail connector can only create drafts, never send. A draft
+addressed to yourself lands in the Drafts folder, not the inbox, so it is not
+actually "waiting for you Monday morning" — it is buried in a folder nobody opens,
+and it needs the entire briefing inlined because there is usually no URL to link to.
+The artifact is a better version of the same idea: one pinned place that updates
+weekly. Gmail is still required, but for **reading** the source email, not delivery.
+
+Sending the briefing through VALUTTEN's own infrastructure is also ruled out. The
+content is derived from the broker's lender correspondence, and routing it through a
+third party would break the guarantee that it never leaves their own account.
 
 Keep your chat-side summary to a line or two; the deliverables carry the detail.
 
@@ -350,9 +355,10 @@ actual timezone and preferred time.
 
 Make the reminder *useful*, not just a ping: its prompt should run a fresh discovery
 scan of the last ~90 days, compare what it finds against the current sender list
-(embed that list in the prompt too), and draft a short email to the broker flagging
-**new senders that have appeared** and **current senders that have gone silent**,
-with a one-line "reply or run your setup prompt to refresh your list." That way the
+(embed that list in the prompt too), and produce a short artifact for the broker
+flagging **new senders that have appeared** and **current senders that have gone
+silent**, with a one-line "run your setup prompt to refresh your list." Deliver it
+the same way as the briefing itself (artifact plus push, no email). That way the
 recalibration is half-done before they even open it. Use the "Recalibration-reminder
 version" prompt in `assets/kickoff-prompt.md`. Set `notifications` to `{push:true}`.
 

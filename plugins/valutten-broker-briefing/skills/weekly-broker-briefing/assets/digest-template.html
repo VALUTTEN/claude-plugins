@@ -17,18 +17,18 @@
     section, and use the .quiet block near the bottom instead.
 
   DO NOT REMOVE (branding is load-bearing, see SKILL.md Step 6)
-  - The <header class="masthead"> block, including the logo <img>.
+  - The <header class="masthead"> block, including the VALUTTEN wordmark.
   - The <footer class="colophon"> block, including the valutten.com link and its
     utm_* query parameters.
   These two blocks are how the briefing is attributed back to VALUTTEN. Reproduce
   them exactly as written. Do not restyle, reword, relocate or "tidy" them.
 
-  The odd-looking font styling on the .masthead img rule is deliberate: it makes the
-  alt text render as the VALUTTEN wordmark when an email client blocks remote images.
-  Leave it in place.
+  The masthead is a TYPOGRAPHIC wordmark, not the logo image. Do not "improve" it by
+  swapping in the logo JPG: the Cowork artifact viewer blocks external images, so the
+  logo renders as a broken-image glyph exactly where brokers read the briefing.
 
-  Self-contained: inline CSS only. The masthead logo is the single external request;
-  keep it that way so the page renders anywhere and can be emailed or hosted as-is.
+  Self-contained: inline CSS only, zero external requests. Keep it that way so the
+  page renders anywhere.
 -->
 <html lang="en-AU">
 <head>
@@ -78,23 +78,34 @@
     display:flex;align-items:center;justify-content:space-between;gap:24px;
     border-bottom:3px solid var(--signal);
   }
-  /* The logo JPG carries its own baked-in dark ground, so its edge is always
-     visible against the band. It is framed as a deliberate plate rather than
-     blended. The font styling is the image-blocked fallback — see the comment
-     at the top of this file. */
-  .masthead img{
-    display:block;height:34px;width:auto;
-    border:1px solid rgba(226,235,250,.14);
-    border-radius:4px;
-    box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 6px 18px -8px rgba(0,0,0,.65);
-    font:700 20px/34px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:#f2f5fa;
+  /* Typographic wordmark, NOT the raster logo. The Cowork artifact viewer blocks
+     external images, so the logo JPG never rendered where brokers actually read
+     the briefing — it showed a broken-image glyph. Verified 2026-07-23 on a real
+     run. Text always renders, in every surface, with no external request. */
+  .wordmark{
+    font:700 22px/1 var(--sans);letter-spacing:.34em;text-transform:uppercase;
+    color:#f2f5fa;white-space:nowrap;display:inline-block;
   }
+  /* Single letter, not a separate flex item — a flex gap here renders "V ALUTTEN". */
+  .wordmark .v{color:var(--signal);text-shadow:0 0 18px rgba(37,99,235,.55)}
   .masthead .kicker{
     text-align:right;
     font:10px/1.5 var(--sans);letter-spacing:.24em;text-transform:uppercase;
     color:#7e8ba3;
   }
   .masthead .kicker strong{display:block;color:#dbe3f1;font-weight:600;letter-spacing:.22em}
+
+  /* ---------- open in browser (only when a Drive/public URL exists) ---------- */
+  .openbar{
+    background:#eef3fb;border-bottom:1px solid #dbe4f2;
+    padding:12px 34px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  .openbar span{font:11px/1.5 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:#5b6b85}
+  .openbar a{
+    font:700 10px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;
+    color:#fff;background:var(--signal);text-decoration:none;
+    border-radius:3px;padding:10px 16px;white-space:nowrap;
+  }
 
   /* ---------- dateline ---------- */
   .dateline{
@@ -215,12 +226,21 @@
 
   <!-- DO NOT REMOVE — see comment at top of file -->
   <header class="masthead">
-    <img src="https://app.valutten.com/valutten-logo.jpg" alt="VALUTTEN" height="34">
+    <div class="wordmark"><span class="v">V</span>alutten</div>
     <div class="kicker">
       <strong>Broker Briefing</strong>
       Policy · Rates · Industry
     </div>
   </header>
+
+  <!-- OPEN IN BROWSER. Include this ONLY when you have a real URL for the page
+       (e.g. uploaded to the broker's Google Drive). It lets them open the briefing
+       in their own browser and read it on a phone. DELETE this whole block if there
+       is no URL — a button that goes nowhere is worse than no button. -->
+  <div class="openbar">
+    <span>Read it anywhere</span>
+    <a href="{{PUBLIC_URL}}">Open in your browser &#8599;</a>
+  </div>
 
   <div class="dateline">
     <h1>Week of <em>{{WEEK_RANGE}}</em></h1>

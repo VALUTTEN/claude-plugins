@@ -17,15 +17,19 @@ settlements, anything about one named borrower).
 The result is delivered two ways:
 
 - an **interactive HTML digest** grouped by theme, where every item links straight
-  back to the original email and to the source document/website; and
-- a **briefing email drafted into the broker's own inbox**, so it's waiting for them
-  Monday morning.
+  back to the original email and to the source document/website, delivered as a
+  Cowork artifact you can pin so each week updates the same place; and
+- a **push notification** on Monday when the new briefing is ready.
+
+No email is sent or drafted. Gmail is used to *read* your sources, nothing else.
 
 ## Getting started
 
-1. **Connect Google Workspace / Gmail** in Cowork — the briefing reads and drafts
-   email through that connector, so it can only run in the broker's own session with
-   their account connected.
+1. **Connect Google Workspace / Gmail** in Cowork — the briefing reads email
+   through that connector, so it can only run in the broker's own session with their
+   account connected. It never sends or drafts anything. Connecting **Google Drive**
+   too is optional but useful: the digest then also gets a real shareable URL in the
+   broker's own Drive.
 2. **Run first-time setup.** The first time, the plugin scans the inbox over the last
    ~60 days, discovers the real senders, groups them, and lets the broker pick which
    belong in their briefing — no need to guess a list from memory.
