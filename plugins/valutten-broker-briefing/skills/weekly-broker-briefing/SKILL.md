@@ -401,8 +401,47 @@ version" prompt in `assets/kickoff-prompt.md`. Set `notifications` to `{push:tru
 Tell the broker this exists and that they can change the cadence or turn it off
 anytime — some brokers will prefer it monthly, others twice a year.
 
+### After creating the schedule: prime the permissions (do NOT skip)
+
+A scheduled run stalls on permission prompts and waits indefinitely, so the broker
+finds nothing on Monday and assumes it is broken. Immediately after creating the task:
+
+1. Tell the broker to click **Run now** on the task.
+2. Tell them to watch for permission prompts and choose **"Always allow"** on each one,
+   not the single-use approval. Future runs then auto-approve the same tools.
+
+Say this out loud in the conversation rather than assuming they will find it. Without
+it the first unattended run halts on the Gmail permission and every run after it does
+the same.
+
+Two cases where "Always allow" will not stick, both outside our control:
+
+- Connector tools their **organisation has set to "ask"** prompt on every call and offer
+  no always-allow option.
+- **Team or Enterprise** orgs may require per-task approval for write-capable connector
+  tools.
+
+If either applies, say so plainly: the briefing will need a click each week, and that is
+their admin's policy rather than a fault in the plugin.
+
 ## Handling problems gracefully
 
+- **Gmail connector blocked by their employer.** Aggregators and licensees often
+  allowlist which third-party apps may touch company mail. If connecting fails or the
+  connector is absent, this is almost certainly it. Say so directly: it needs their IT
+  or licensee to approve the connector, and no amount of retrying will fix it. Do not
+  let them conclude the plugin is broken.
+- **The wrong Google account is connected.** If discovery finds almost no lender,
+  aggregator or industry senders, suspect a personal Gmail rather than the work
+  Workspace before concluding the inbox is quiet. Ask which account is connected.
+- **Placeholders left unfilled.** If the pasted prompt still contains `<your email>` or
+  `<e.g. Australia/Brisbane>`, do not guess and do not proceed — ask for the real values.
+- **Marketplace or plugins unavailable.** On a managed Team/Enterprise account an admin
+  can disable personal marketplaces entirely, so the "Add marketplace" option is missing.
+  That is an org policy, not a fault; point them at their Claude admin.
+- **Usage limits.** A 60-day discovery scan plus weekly runs consume usage. If a run dies
+  partway, say it may be a plan limit and suggest re-running later rather than silently
+  producing a thin briefing.
 - **Gmail not connected:** stop and ask the broker to connect their Google
   Workspace account before continuing — everything depends on it.
 - **No sender list:** ask for it; don't guess a list of banks.

@@ -1,6 +1,6 @@
 {
   "name": "valutten-broker-briefing",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "VALUTTEN's weekly Monday policy & industry briefing for mortgage brokers. Scans a broker's lender, aggregator, licensee and industry-media email and builds a linked, interactive HTML digest of rate changes, credit/lending policy, regulatory news and industry events — deliberately excluding client and deal-specific traffic.",
   "author": {
     "name": "VALUTTEN"
