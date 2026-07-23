@@ -14,7 +14,7 @@
       "source": "./plugins/valutten-broker-briefing",
       "displayName": "VALUTTEN Broker Briefing",
       "description": "Weekly Monday policy, rate and industry briefing built from the broker's own inbox.",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "author": {
         "name": "VALUTTEN"
       },

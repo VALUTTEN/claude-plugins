@@ -25,9 +25,11 @@ and event/awards organisers. Separate out the senders that are mostly
 client/deal-specific (approvals, valuations, settlements) or marketing/personal, and
 recommend excluding those.
 
-Show me the grouped list with a couple of example subject lines each and your
-recommended include/exclude, and let me pick which sources belong in my weekly
-briefing. Once I've chosen, save that as my sender list, run a first briefing over
+Show me the grouped list — sender and how many emails from each, no subject lines
+and no message contents — with your recommended include/exclude, and let me pick which
+sources belong in my weekly briefing. Do not open or quote any of my emails while
+working out who is who: my inbox contains client information and it should not be read
+to make a sender-level decision. Once I've chosen, save that as my sender list, run a first briefing over
 the last 7 days, and set up the recurring Monday schedule with the list baked in.
 
 My email is <<andrew's email>> and my timezone is <<e.g. Australia/Brisbane>>.

@@ -62,6 +62,27 @@ ephemeral, and a scheduled run starts fresh with no memory. The durable place fo
 the sender list is the prompt itself — that's why the kickoff prompt and the
 scheduled-task prompt both embed the full list (see "Set up the weekly schedule").
 
+## Client data boundary — read this before changing any search
+
+This skill runs against a mortgage broker's mailbox, which contains their clients'
+personal information. Everything the skill reads is sent to Anthropic for inference,
+in the United States. The broker's own privacy obligations, and usually their
+aggregator's or licensee's AI policy, make bulk exposure of client data unacceptable.
+
+The rule: **read the minimum needed, and never read client mail to decide it is client
+mail.** Concretely:
+
+- Sender discovery uses sender address, domain and volume only. No subjects, no snippets,
+  no bodies, no opening messages.
+- Topic searches must carry the negative terms that exclude deal traffic (see Step 2).
+- Anything that turns out to be about one named borrower is dropped on sight, not
+  summarised and not quoted.
+- Nothing is ever transmitted to VALUTTEN. The briefing exists only in the broker's own
+  account.
+
+This constraint is the reason the briefing is defensible for a broker to run at all. If a
+change would make the output better by reading more client email, the answer is no.
+
 ## The workflow
 
 ### Step 0 — Setup mode (first run / recalibration)
@@ -81,17 +102,26 @@ it reads their private inbox, so it can only run where that account is connected
    that a 7-day window would miss. Confirm with the broker, or just proceed if
    they've said go.
 
-2. **Broad scan — no preset list.** Pull the inbox over the window and aggregate by
-   sender. For each distinct sender (address and/or domain) collect: how many emails,
-   and 1–3 representative subject lines. You don't need to open every email — sender
-   + subject is enough to triage at this stage. Watch specifically for the
+2. **Broad scan — sender metadata ONLY.** Pull the inbox over the window and aggregate
+   by sender. For each distinct sender collect **only**: the address, the domain, and how
+   many emails were received.
+
+   **Do NOT collect, read, quote or display subject lines, snippets or bodies at this
+   stage, and do not open messages.** Broker subject lines routinely carry a client's
+   name ("Unconditional approval — Smith", "Valuation received — 14 Oak St"). Reading
+   them to decide a sender is client-transactional means client personal information
+   leaves the broker's mailbox for no benefit, since the decision is a sender-level one.
+   See "Client data boundary" above. Watch specifically for the
    Loan Market / aggregator ecosystem (corporate comms, MyCRM/platform notices,
    compliance, the lender panel) plus the banks, non-banks, industry media
    (Momentum Media / The Adviser / Mortgage Business / Broker Daily) and event
    organisers.
 
-3. **Auto-triage into candidate groups.** Using `references/classification.md`, sort
-   the discovered senders into:
+3. **Auto-triage into candidate groups — from the sender identity alone.** Classify on
+   the domain, the local part (`noreply@`, `broker@`, `notifications@`), and volume
+   pattern. A domain you cannot place is offered to the broker as "unrecognised" for them
+   to judge; never open one of its emails to find out. Using `references/classification.md`,
+   sort the discovered senders into:
    - **Likely signal** (recommend including) — grouped as Lenders/Banks,
      Aggregator / Loan Market / Licensee, Industry Media, Events, Regulatory.
    - **Likely client-transactional / noise** (recommend excluding) — senders whose
@@ -101,9 +131,10 @@ it reads their private inbox, so it can only run where that account is connected
 
 4. **Let the broker select.** Present the grouped list for a quick decision. Two ways,
    broker's choice:
-   - **Conversational (default, lowest friction):** show a numbered, grouped list and
-     ask them to tell you any to drop or add. Good for a fast "looks right, but drop
-     3 and 7".
+   - **Conversational (default, lowest friction):** show a numbered, grouped list of
+     **senders and message counts** and ask them to tell you any to drop or add. Good
+     for a fast "looks right, but drop 3 and 7". Do not illustrate entries with subject
+     lines, even if it would make the list easier to judge.
    - **Interactive checklist:** populate `assets/source-picker.html` with the
      discovered senders (one checkbox row each, pre-ticked per your recommendation),
      deliver it, and have them tick and click **Copy selected senders** to paste the
@@ -134,8 +165,13 @@ things, then de-duplicate by message:
 `from:(cba.com.au OR nab.com.au OR anz.com.au OR themortgageagency.com.au) newer_than:7d`
 
 **Pass B — by topic** (catches relevant mail from senders not on the list —
-e.g. a new lender BDM, a one-off industry invite). e.g.:
-`newer_than:7d (subject:(rate OR rates OR policy OR serviceability OR "credit policy" OR APRA OR ASIC OR webinar OR award OR conference OR "professional development"))`
+e.g. a new lender BDM, a one-off industry invite). This pass MUST be bounded so it
+cannot sweep in client and deal email. Exclude the transactional vocabulary explicitly:
+
+`newer_than:7d (subject:(rate OR rates OR policy OR serviceability OR "credit policy" OR APRA OR ASIC OR webinar OR award OR conference OR "professional development")) -subject:(approval OR approved OR valuation OR settlement OR settled OR "pre-approval" OR discharge OR payout OR "loan application")`
+
+If a Pass B result turns out to concern one named borrower, **drop it immediately and do
+not summarise it**, even if it also mentions a rate or policy change.
 
 Adjust `newer_than` to the chosen window. Pull the thread/message list from both,
 merge, and drop duplicate message IDs. Then read each candidate with the Gmail
