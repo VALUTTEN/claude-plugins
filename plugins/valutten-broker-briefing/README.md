@@ -40,6 +40,16 @@ No email is sent or drafted. Gmail is used to *read* your sources, nothing else.
 Ready-to-paste kickoff, scheduled-task and recalibration prompts live in the skill's
 `assets/kickoff-prompt.md`.
 
+### After a plugin update
+
+A scheduled task keeps the prompt it was created with, so installing a new version
+does not change a briefing that already runs. Say:
+
+> Refresh my weekly briefing schedule — I've updated the plugin.
+
+That rebuilds the task's prompt from the current version while keeping the sender
+list, delivery time and notification settings. There is no need to redo setup.
+
 ## What's inside
 
 - **skills/weekly-broker-briefing** — the full workflow: setup/discovery mode,
@@ -51,9 +61,10 @@ Ready-to-paste kickoff, scheduled-task and recalibration prompts live in the ski
 
 - Claude desktop app (Cowork), with custom plugins allowed by the user's organisation.
 - A connected **Google Workspace / Gmail** account (the broker's own).
-- Optional: a Google Drive / file-hosting connector, which lets the briefing email
-  link to a hosted copy of the HTML page; without it, the full linked digest is
-  included in the email body as a fallback.
+- Optional: a Google Drive / file-hosting connector. With it, the digest also gets a
+  real shareable URL in the broker's own Drive and an "Open in your browser" button,
+  which is what lets the briefing open on a phone or be shared with their team.
+  Without it, the digest is still delivered in full as a Cowork artifact.
 
 ## Notes
 
@@ -63,4 +74,4 @@ variant would need the search steps adapted.
 
 ---
 
-Built for VALUTTEN subscribers. Version 0.1.0.
+Built for VALUTTEN subscribers. Version 0.6.0.

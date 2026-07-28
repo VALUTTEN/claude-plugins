@@ -13,6 +13,24 @@ a push notification. **No prompt here asks for an email.** Gmail is read-only in
 plugin — a self-addressed draft lands in Drafts where nobody looks (SKILL.md, "Why no
 email"). If you edit these prompts, keep it that way.
 
+## The version stamp — why the two scheduled prompts start with a comment
+
+Both scheduled prompts open with:
+
+```
+# valutten-broker-briefing prompt v<version> — keep this line
+```
+
+A scheduled task stores its own copy of the prompt from the moment it was created.
+Publishing a new plugin version does **not** reach it. So a broker can be running a
+prompt that is several releases old, and nothing on the task says so — which is
+exactly how a trigger survived for weeks calling a skill name that no longer existed.
+
+The stamp makes staleness visible: open the task, read line one, compare against the
+plugin version. **When you change either scheduled prompt, bump the stamp to the
+version you are releasing.** A stamp that never moves is worse than no stamp, because
+it reads as current.
+
 ---
 
 ## First-time setup version — run this ONCE to build the sender list
@@ -77,9 +95,13 @@ This is the `prompt` for the `create_trigger` scheduled task. It repeats the sen
 list and settings because the scheduled session starts fresh. Keep it complete.
 
 ```
+# valutten-broker-briefing prompt v0.6.0 — keep this line
+
 It's Monday — build this week's industry briefing using the weekly-broker-briefing
 skill. This is an automated run with nobody watching, so proceed without asking
 questions.
+
+The briefing is for <<broker's name>> — use it for {{BROKER_NAME}} in the template.
 
 Scan the Google Workspace inbox from the last 7 days. KEEP only industry/policy
 signal: rate changes, credit & lending policy changes, regulatory/government news,
@@ -115,6 +137,8 @@ Keeps the sender list from going stale. Fires every few months, rescans, and del
 a short artifact highlighting what changed. Self-contained (fresh session).
 
 ```
+# valutten-broker-briefing prompt v0.6.0 — keep this line
+
 It's time for a quarterly recalibration of my weekly industry briefing. This is an
 automated run — proceed without asking questions.
 
@@ -140,6 +164,22 @@ is the whole delivery.
 If nothing has changed, say so in one line rather than padding it out.
 Timezone for dates: <<e.g. Australia/Brisbane>>.
 ```
+
+---
+
+## Refreshing an existing trigger after a plugin update
+
+The broker does not need any of the prompts above for this. They say:
+
+```
+Refresh my weekly briefing schedule — I've updated the plugin.
+```
+
+The skill then reads the stored prompt off their existing task, keeps the sender
+list, name, timezone and cron, and rebuilds the rest from the current template. See
+"Refresh an existing schedule" in SKILL.md. The calibrated sender list is the
+expensive part and it is already in the old prompt, so nobody should be re-running
+first-time setup just to pick up a new version.
 
 ---
 

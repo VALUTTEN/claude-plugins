@@ -13,7 +13,11 @@ description: >-
   week's lender/policy emails", "what changed in the industry this week", "scan
   these senders", set up a recurring weekly review of policy/industry changes, or
   mentions VALUTTEN's weekly review. Trigger even without the word "digest" — any
-  request to review a week of lender/policy/industry email into a briefing.
+  request to review a week of lender/policy/industry email into a briefing. ALSO
+  use to maintain an existing briefing schedule — "refresh my schedule", "update
+  my briefing", "is my briefing up to date", "I just updated the plugin", "my
+  Monday briefing stopped working" — which rebuilds a stale scheduled-task prompt
+  from the current template while keeping the broker's sender list and cron.
 ---
 
 # Weekly Policy & Industry Digest
@@ -364,14 +368,63 @@ field too.
 
 **Self-contained prompt with the sender list embedded.** A scheduled run starts a
 fresh session with no memory of this conversation, so the trigger's `prompt` must
-carry everything: instruction to run this skill, the full sender list, the
-broker's email, the lookback window, and the delivery instructions. Build it from
-the template in `assets/kickoff-prompt.md` (the "Scheduled-task version" at the
-bottom), with the real addresses filled in. Set `notifications` to `{push:true}`
-so the broker gets a ping when each week's briefing is ready.
+carry everything: the version stamp, instruction to run this skill, the broker's
+name (for `{{BROKER_NAME}}`), the full sender list, the lookback window, and the
+delivery instructions. Build it from the template in `assets/kickoff-prompt.md`
+(the "Scheduled-task version"), with the real values filled in. Set `notifications`
+to `{push:true}` so the broker gets a ping when each week's briefing is ready.
+
+**Keep the version-stamp line.** Both scheduled prompts open with
+`# valutten-broker-briefing prompt v<version> — keep this line`. Never strip it when
+filling in the placeholders. A stored trigger prompt is a copy frozen at creation
+time, and this line is the only way anyone can tell how old that copy is — see
+"Refresh an existing schedule" below.
 
 After creating it, tell the broker the schedule in plain language ("every Monday
 at 7am Brisbane time") and that they can ask you to change or pause it anytime.
+
+## Refresh an existing schedule (when the plugin has been updated)
+
+Use this when the broker says "update my briefing", "refresh my schedule", "is my
+briefing up to date", or after they install a new version of the plugin.
+
+Publishing a new plugin version does **not** update tasks that already exist. Each
+scheduled task stores the prompt it was created with, verbatim and forever. So after
+an upgrade the broker can have a current skill and a stale prompt, which fails in
+quiet ways: a renamed skill that no longer resolves, a delivery instruction that
+contradicts the skill, a privacy guard the old prompt never had.
+
+Rebuild the prompt rather than asking the broker to re-do setup — the sender list
+they calibrated is the expensive part, and it is already sitting in the old prompt.
+
+1. **List their tasks** and find the briefing ones (the weekly Monday one, and the
+   quarterly recalibration one if it exists).
+2. **Read each task's stored prompt.** Check line one for
+   `# valutten-broker-briefing prompt v<version>`. If it matches the installed
+   plugin version, that task is current — say so and leave it alone. If it is older
+   or the line is missing entirely, it needs rebuilding.
+3. **Lift the broker-specific values out of the old prompt** — the sender list, the
+   broker's name, their timezone, and any lookback they customised. These are the
+   only things worth keeping. Do not carry across any of the surrounding
+   instructions: those are what you are replacing.
+4. **Rebuild from the current template** in `assets/kickoff-prompt.md`, dropping
+   those values into the placeholders, with the stamp set to the installed version.
+5. **Update the task's prompt in place** if the Remote MCP surface exposes an update
+   tool; if it only exposes create and delete, record the existing cron expression
+   and notification settings first, create the replacement, and delete the old one
+   only once the new task exists. Either way the cron and notifications must come
+   out identical — the broker chose that delivery time, and silently moving it is a
+   worse bug than the one you are fixing. Never delete first: a failed create leaves
+   them with no briefing at all and no record of when it used to run.
+6. **Tell them what actually changed** in one or two lines, in plain terms ("your
+   Monday briefing was still set up to email you a draft; it now just opens the
+   page"). Do not paste the diff.
+
+If the sender list cannot be recovered from the old prompt — the task was deleted,
+or the prompt was hand-edited into something unparseable — say so plainly and offer
+to run Setup mode (Step 0) again. Do not guess at a sender list, and do not
+reconstruct one by scanning the inbox without telling them: that is a fresh read of
+their mailbox and they should know it is happening.
 
 ## Set up the recalibration reminder (keep the sender list fresh)
 
