@@ -13,8 +13,11 @@ deliberately excludes client and deal-specific email. Nothing about a named borr
 appears in it.
 
 You get an interactive HTML digest grouped by theme, where every item links back to
-the original email and to the source document, plus a copy saved as a draft in your
-own Gmail ready for Monday morning.
+the original email and to the source document. It arrives Monday morning as a pinned
+page in your own Claude account, with a push notification when it is ready.
+
+Nothing is emailed, sent or drafted. Gmail is used to *read* your sources, nothing
+else.
 
 The briefing runs entirely inside your own Claude account, against your own mailbox.
 None of its contents are sent to VALUTTEN.

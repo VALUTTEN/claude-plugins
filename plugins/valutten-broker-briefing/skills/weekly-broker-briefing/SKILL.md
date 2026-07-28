@@ -95,7 +95,7 @@ discover it, show it grouped, and let them tick what belongs in the briefing.
 
 Do this in **the broker's own session** with their Google Workspace connected —
 it reads their private inbox, so it can only run where that account is connected
-(e.g. Andrew's Loan Market Workspace), not from anyone else's session.
+(e.g. their aggregator-issued Workspace account), not from anyone else's session.
 
 1. **Pick a discovery window.** Default to the **last 45–60 days** — long enough to
    catch monthly-ish senders (policy bulletins, industry newsletters, event invites)
