@@ -57,8 +57,10 @@ not client-facing), so favour a concise, plain, get-to-the-point tone over polis
    from memory. Run **Setup mode (Step 0)** below, which discovers the real senders
    from their inbox and lets them pick. The whole digest depends on getting this
    list right, so it's worth calibrating once against reality.
-3. **The broker's own email address** — used to identify them in the briefing
-   header, not to send anything to.
+3. **The broker's name** — it fills `{{BROKER_NAME}}` in the digest header
+   ("Prepared for Sarah"). A **name**, not an email address: an email address in
+   that slot looks like a mail-merge that misfired. You do not need their email
+   address for anything — nothing is sent — so don't ask for it.
 4. **The lookback window** — default to the last 7 days unless told otherwise.
 
 Do not rely on a saved config file persisting between runs: Cowork sessions are
@@ -86,6 +88,26 @@ mail.** Concretely:
 
 This constraint is the reason the briefing is defensible for a broker to run at all. If a
 change would make the output better by reading more client email, the answer is no.
+
+## Talking to the broker while it runs
+
+The audience is a mortgage broker who has never installed a plugin before. Two
+things reliably make them think it has broken when it has not:
+
+- **Silence.** A discovery scan or a full briefing run goes quiet for several
+  minutes. To someone watching a still screen that is indistinguishable from a
+  crash, and they will close the window. **Before you start any long scan, say
+  plainly that it will be quiet for a few minutes and that this is normal.** Then
+  keep it to one short progress line at each major step — enough to show a pulse,
+  not a running commentary.
+- **Permission prompts.** These stop everything and wait indefinitely. Say a
+  button is coming, say they have to click it, and say to choose **"Always allow"**
+  rather than the one-time approval. See "prime the permissions" below.
+
+Never make a broker feel they are being tested on something technical. If something
+is genuinely outside our control (an org policy, a missing connector), say so in one
+plain sentence and say who can fix it — do not let them conclude the plugin is
+broken or that they did it wrong.
 
 ## The workflow
 
@@ -155,7 +177,7 @@ straight to Step 1.
 
 ### Step 1 — Gather the sender list and settings
 
-Collect: the list of senders/domains, the broker's email, and the lookback
+Collect: the list of senders/domains, the broker's name, and the lookback
 window. Restate them back briefly so the broker can catch a typo'd domain before
 you spend time searching. In an unattended/scheduled run, skip the confirmation
 and proceed with what's embedded in the prompt.
@@ -181,6 +203,21 @@ Adjust `newer_than` to the chosen window. Pull the thread/message list from both
 merge, and drop duplicate message IDs. Then read each candidate with the Gmail
 connector to get sender, subject, date, a usable summary of the body, and any
 links in the body.
+
+**If a sender search returns nothing, re-run it with `in:anywhere` before believing
+it.** Gmail search silently excludes Spam and Trash unless you ask for them. Brokers
+very often have an old filter auto-archiving or auto-trashing lender bulletins —
+they set it up years ago to clean up their inbox and have long forgotten. The result
+is a briefing that says "quiet week" with total confidence while the rate change sat
+in Trash. This is the worst failure this skill has, because it looks like a working
+run and the broker has no way to tell.
+
+So: any configured sender that returns **zero** results over the window gets one
+retry as `from:thatsender in:anywhere newer_than:<window>`. If the retry finds mail,
+use it, and **tell the broker in your chat-side summary which senders were only
+found outside the inbox** — that is a filter they probably want to fix, and it is
+information they cannot get any other way. Do not silently fold the results in as if
+nothing happened.
 
 Be efficient: you don't need the full body of every message — the sender,
 subject, and first chunk of content are usually enough to classify and summarise.
@@ -234,23 +271,21 @@ Also capture the source name and email date for display. Nothing else — the go
 a clean list of one-line bullets, each with a subject and a click-through, not a
 wall of cards.
 
-Group items into these categories (omit any that are empty):
-1. Rate Changes
-2. Credit & Lending Policy
-3. Regulatory & Government
-4. Lender Service & Process
-5. Aggregator / Licensee
-6. Industry News & Media
-7. Events & Awards
+Group items into these six categories, and **only** these six. They match the
+section headings in `assets/digest-template.html` exactly, in this order. Omit any
+that are empty (delete the whole `<section class="cat">`), but never invent a
+seventh — there is no slot for it in the template, so anything you file under a
+category that isn't on this list silently vanishes from the page.
 
-Group items into these categories (omit any that are empty):
 1. Rate Changes
 2. Credit & Lending Policy
 3. Regulatory & Government
 4. Lender Service & Process
-5. Aggregator / Licensee
-6. Industry News & Media
-7. Events & Awards
+5. Aggregator & Licensee
+6. Industry News & Events
+
+Note that **industry media and events share one section**. A conference invite, an
+awards night and a Momentum Media article all belong in "Industry News & Events".
 
 ### Step 5 — Build the clickable source
 
@@ -284,6 +319,37 @@ bulleted list**, not heavy cards. Fill in:
 
 Keep empty categories out. Read the template's comments for exactly where content
 slots in. Save the finished page to a file (e.g. `weekly-briefing-<YYYY-MM-DD>.html`).
+
+**Every `{{PLACEHOLDER}}` must be replaced or its element deleted.** A literal
+`{{BROKER_NAME}}` rendered in the header is the single most visible way this skill
+can look broken, and it is the first thing the broker sees.
+
+Delete the template's instructional HTML comments as you go — the "HOW TO USE THIS
+TEMPLATE" block at the top, the item-template comment, the quiet-week comment. They
+are notes to you, not content, and the first of them contains the literal text
+`{{PLACEHOLDERS}}`. Keep the one comment that says not to remove the colophon.
+
+Then search the finished file for `{{` — if anything remains, fix it. The full set:
+
+| Placeholder | Fill with |
+|---|---|
+| `{{WEEK_RANGE}}` | e.g. `21–27 July 2026` |
+| `{{GENERATED_DATE}}` | the date you ran |
+| `{{BROKER_NAME}}` | the broker's name from the prompt (**not** their email address) |
+| `{{ISSUE_NUMBER}}` | see below — appears twice, header and colophon |
+| `{{TOP_ITEM_1..3}}` | the 2–3 biggest items; **delete any unused `<li>`** rather than leaving it empty |
+| `{{N}}` | item count for that category |
+| `{{SUBJECT}}` `{{ONE_LINE_SUMMARY}}` `{{PRIMARY_SOURCE_URL}}` `{{EMAIL_URL}}` `{{SOURCE_NAME}}` `{{DATE}}` `{{EFFECTIVE_DATE}}` | per item, per the template's item comment |
+| `{{PUBLIC_URL}}` | the Drive URL — or delete the whole `.openbar` block (Step 7) |
+| `{{SEEN}}` `{{NEXT_BRIEFING_DATE}}` | quiet-week block only |
+
+**The issue number.** A scheduled run is a fresh session with no memory of last
+week, so you cannot know the sequence number by reasoning about it. Derive it from
+the date instead: **the ISO week number of the briefing week**, so the same week
+always produces the same issue number no matter how often it is re-run. Write it
+plainly (`2026-W31`). Do not guess an incrementing counter, and do not write "Issue
+1" every week — a briefing that is permanently issue 1 tells the broker the thing is
+not really running.
 
 **The template is not advisory — reproduce its chrome exactly.** Two blocks are
 load-bearing and must appear in every digest you produce, byte for byte as written
@@ -335,6 +401,21 @@ deliberate — see "Why no email" below.
 The scheduled Monday run sets `notifications` to `{push:true}` (see "Set up the
 weekly schedule"), so the broker gets a push when the new briefing is ready. Artifact
 plus push is the whole delivery mechanism.
+
+**Never end a run without delivering something.** The artifact path depends on tools
+that are not guaranteed to be present in every session type. If
+`mcp__remote-devices__create_artifact` is unavailable or errors, fall back in this
+order, and take the first that works:
+
+1. `SendUserFile` with the HTML — the broker gets the file in the conversation.
+2. Upload to Drive if connected, and give them the URL.
+3. Failing both, put the briefing's headlines directly in your chat reply as plain
+   text with the links inline.
+
+Then say in one line which path you used and why, so the broker knows the delivery
+was degraded rather than wondering where their page went. A run that did all the
+work and then silently produced no output is the worst possible outcome: it burns
+their usage, tells them nothing, and looks exactly like the plugin not working.
 
 **Why no email.** The Gmail connector can only create drafts, never send. A draft
 addressed to yourself lands in the Drafts folder, not the inbox, so it is not
@@ -487,8 +568,13 @@ their admin's policy rather than a fault in the plugin.
 - **The wrong Google account is connected.** If discovery finds almost no lender,
   aggregator or industry senders, suspect a personal Gmail rather than the work
   Workspace before concluding the inbox is quiet. Ask which account is connected.
-- **Placeholders left unfilled.** If the pasted prompt still contains `<your email>` or
-  `<e.g. Australia/Brisbane>`, do not guess and do not proceed — ask for the real values.
+- **Placeholders left unfilled.** The kickoff prompts mark their blanks with double
+  angle brackets. If the pasted prompt still contains anything of the form
+  `<<...>>` — `<<paste sender addresses / domains here>>`, `<<broker's name>>`,
+  `<<e.g. Australia/Brisbane>>` — do not guess and do not proceed. Ask for the real
+  values. In an **unattended** run there is nobody to ask, so say clearly in the
+  output that the schedule was created with placeholders still in it and needs
+  fixing, rather than briefing on a sender list that is literally the word "paste".
 - **Marketplace or plugins unavailable.** On a managed Team/Enterprise account an admin
   can disable personal marketplaces entirely, so the "Add marketplace" option is missing.
   That is an org policy, not a fault; point them at their Claude admin.
@@ -501,5 +587,12 @@ their admin's policy rather than a fault in the plugin.
 - **A quiet week / nothing kept:** still deliver a short briefing that says it was
   a quiet week and lists the few low-signal items you saw, rather than silently
   producing nothing — a broker seeing "quiet week" is useful information.
+  **But never report a quiet week without first re-running the empty senders with
+  `in:anywhere`** (Step 2). A genuine quiet week and a filter quietly trashing every
+  lender bulletin look identical from inside the inbox, and only one of them is
+  worth telling the broker about. If *every* configured sender came back empty,
+  treat that as a fault to investigate — a whole sender list going silent in the
+  same week is far more likely to be a connector, account or filter problem than a
+  real lull.
 - **Huge volume:** if a sender floods the inbox, summarise at the theme level and
   link representative emails rather than making 40 near-identical cards.

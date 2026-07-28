@@ -27,9 +27,15 @@ prompt that is several releases old, and nothing on the task says so — which i
 exactly how a trigger survived for weeks calling a skill name that no longer existed.
 
 The stamp makes staleness visible: open the task, read line one, compare against the
-plugin version. **When you change either scheduled prompt, bump the stamp to the
-version you are releasing.** A stamp that never moves is worse than no stamp, because
-it reads as current.
+plugin version.
+
+**The stamp always equals the plugin version. Bump it on every release, even when
+the prompt text itself did not change.** It is tempting to treat it as a separate
+prompt-template version and bump it only when the prompt changes — don't. Refresh
+mode compares the stamp against the installed plugin version, so a stamp that lags
+makes a current task look stale. The cost of the simple rule is an occasional
+rebuild that changes nothing, which is harmless because rebuilding is idempotent.
+The cost of the clever rule is a comparison nobody can reason about. Keep it dumb.
 
 ---
 
@@ -95,7 +101,7 @@ This is the `prompt` for the `create_trigger` scheduled task. It repeats the sen
 list and settings because the scheduled session starts fresh. Keep it complete.
 
 ```
-# valutten-broker-briefing prompt v0.6.0 — keep this line
+# valutten-broker-briefing prompt v0.7.0 — keep this line
 
 It's Monday — build this week's industry briefing using the weekly-broker-briefing
 skill. This is an automated run with nobody watching, so proceed without asking
@@ -125,6 +131,11 @@ and put its shareable URL in the template's `.openbar` block, so the briefing op
 in a real browser. If there is no such URL, delete that block rather than shipping a
 button that goes nowhere.
 
+If any configured sender returns zero results, re-run that sender with in:anywhere
+before concluding there was nothing — a mail filter may be auto-archiving or
+trashing their bulletins. Note in the briefing which senders were only found
+outside the inbox.
+
 If it was a quiet week, still deliver a short "quiet week" briefing rather than
 nothing. Timezone for dates: <<e.g. Australia/Brisbane>>.
 ```
@@ -137,7 +148,7 @@ Keeps the sender list from going stale. Fires every few months, rescans, and del
 a short artifact highlighting what changed. Self-contained (fresh session).
 
 ```
-# valutten-broker-briefing prompt v0.6.0 — keep this line
+# valutten-broker-briefing prompt v0.7.0 — keep this line
 
 It's time for a quarterly recalibration of my weekly industry briefing. This is an
 automated run — proceed without asking questions.
