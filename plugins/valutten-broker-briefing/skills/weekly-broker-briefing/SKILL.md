@@ -46,8 +46,29 @@ not client-facing), so favour a concise, plain, get-to-the-point tone over polis
 ## Before you start — what you need
 
 1. **Gmail / Google Workspace must be connected** in this Cowork session (the
-   `Gmail` connector). You'll search and read with it. You will NOT draft or send
-   email — see Step 7.
+   `Gmail` connector).
+
+   **Gmail is strictly read-only for this skill. Search and read. Nothing else.**
+   Use only search and message/thread retrieval. Do **not** label, unlabel, create
+   or delete labels, archive, move, star, mark read or unread, trash, draft or
+   send — not for the broker's convenience, not to "file" what you found, not to
+   mark what you have already processed, not even if the broker asks in passing.
+   If they want the briefing's sources labelled, say that this plugin does not
+   modify their mailbox and they can do it in Gmail themselves.
+
+   This is not fussiness. A broker's mailbox is a business record their licensee
+   and aggregator can audit, and much of it is client correspondence. An automated
+   process silently relabelling or archiving it is a compliance problem, and one
+   that surfaces weeks later when something cannot be found. Read-only is also the
+   promise made on the marketing page and in the setup email, so writing to Gmail
+   would make that copy false.
+
+   Tracking state across runs is the tempting exception — resist it. A label like
+   "briefed" would let a run skip what it already covered, but it writes to their
+   mailbox to save us a search we can do for free with a date window. The lookback
+   window is the state.
+
+   You will NOT draft or send email — see Step 7.
    Google **Drive**, if connected, is a useful extra: it gives the digest a real
    shareable URL in the broker's own Drive.
 2. **A sender list.** The broker tells you which addresses/domains to scan. If
@@ -85,6 +106,9 @@ mail.** Concretely:
   summarised and not quoted.
 - Nothing is ever transmitted to VALUTTEN. The briefing exists only in the broker's own
   account.
+- The mailbox is never modified. No labels, no archiving, no moving, no marking read,
+  no drafts. The broker's inbox is exactly as they left it after a run — see
+  "Before you start".
 
 This constraint is the reason the briefing is defensible for a broker to run at all. If a
 change would make the output better by reading more client email, the answer is no.

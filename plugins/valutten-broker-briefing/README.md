@@ -21,7 +21,9 @@ The result is delivered two ways:
   Cowork artifact you can pin so each week updates the same place; and
 - a **push notification** on Monday when the new briefing is ready.
 
-No email is sent or drafted. Gmail is used to *read* your sources, nothing else.
+**Your mailbox is never changed.** Gmail is read-only here: the briefing searches and
+reads, and that is all. Nothing is moved to a folder, labelled, archived, marked as
+read, deleted, drafted or sent. After a run your inbox is exactly as you left it.
 
 ## Getting started
 
@@ -74,4 +76,4 @@ variant would need the search steps adapted.
 
 ---
 
-Built for VALUTTEN subscribers. Version 0.7.0.
+Built for VALUTTEN subscribers. Version 0.7.1.

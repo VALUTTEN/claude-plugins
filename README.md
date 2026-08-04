@@ -16,8 +16,9 @@ You get an interactive HTML digest grouped by theme, where every item links back
 the original email and to the source document. It arrives Monday morning as a pinned
 page in your own Claude account, with a push notification when it is ready.
 
-Nothing is emailed, sent or drafted. Gmail is used to *read* your sources, nothing
-else.
+Your mailbox is never changed. Gmail is read-only: nothing is moved to a folder,
+labelled, archived, marked as read, deleted, drafted or sent. After a run your inbox
+is exactly as you left it.
 
 The briefing runs entirely inside your own Claude account, against your own mailbox.
 None of its contents are sent to VALUTTEN.
