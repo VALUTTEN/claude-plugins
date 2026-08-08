@@ -53,8 +53,8 @@
       "body_excerpt": "We now accept 100% of regular overtime for essential-services applicants, effective immediately. Separately, the Smith file (app 7710455) requires two further payslips before we can proceed to assessment.",
       "date": "2026-08-04",
       "expect": "DROP",
-      "why": "The hardest case in the set, and deliberately so. SKILL.md Step 2 is unconditional: a message that concerns one named borrower is dropped immediately and not summarised even if it also mentions a policy change. The client material here is substantive outstanding-conditions traffic about the Smith file, not an incidental footer, so the privacy rule governs and the whole message goes. The policy half will arrive again in the lender's own bulletin.",
-      "edge_case": "SKILL.md Step 2 'drop it immediately and do not summarise it, even if it also mentions a rate or policy change' - deliberately in tension with the classification.md 'client is just an example or footer' edge case; see m005 for the other side"
+      "why": "The hardest case in the set. The message carries real policy content AND substantive client traffic about the Smith file — outstanding conditions, not a footer pleasantry. Under the resolved rule (SKILL.md Step 2) what a message IS ABOUT decides it: this one is materially about one borrower's application, so it goes. The policy half arrives again in the lender's own bulletin, which is why dropping it costs almost nothing. Contrast m034, where the client reference is a one-line congratulation and the substance is a book-wide rate sheet — that one is KEPT with the client sentence discarded.",
+      "edge_case": "Named-borrower boundary, the DROP side. Pairs with m034 (KEEP side). Together they test the distinction added in 0.9.0: about-a-borrower drops, mentions-a-borrower keeps its industry substance with the client reference removed. An implementation that treats both the same fails one of them whichever way it leans."
     },
     {
       "id": "m005",
@@ -403,7 +403,7 @@
       "expect": "KEEP",
       "category": "Rate Changes",
       "why": "The counterweight to m004, and the finest distinction in the fixture. The substance is a book-wide rate move; the client reference is a one-line pleasantry carrying no borrower detail. Keep it and summarise the rate only, never the settlement. If a classifier drops this it is over-applying the privacy rule and will quietly lose rate changes.",
-      "edge_case": "classification.md: 'If the substance is a genuine rate/policy change and the client is just an example or footer, KEEP it and summarise the policy, not the client.'"
+      "edge_case": "Named-borrower boundary, the KEEP side. Pairs with m004 (DROP side). The client reference is an incidental courtesy line; the substance is a book-wide rate move. Keep the rate, discard the client sentence entirely — never quote or paraphrase it."
     }
   ]
 }
