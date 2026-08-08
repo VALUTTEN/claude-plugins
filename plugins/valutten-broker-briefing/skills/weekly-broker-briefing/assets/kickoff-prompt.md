@@ -98,48 +98,51 @@ My timezone is <<e.g. Australia/Brisbane>>.
 
 ## Scheduled-task version — embed in the weekly Monday trigger
 
-This is the `prompt` for the `create_trigger` scheduled task. It repeats the sender
-list and settings because the scheduled session starts fresh. Keep it complete.
+This is the `prompt` for the `create_trigger` scheduled task.
+
+**Keep it thin. It carries the broker's settings and nothing else.**
+
+Earlier versions of this prompt restated the whole method — the KEEP/DROP category
+lists, the delivery rules, the Gmail link format, the Trash retry, the quiet-week
+behaviour. That was a mistake, and an expensive one. A stored trigger prompt is
+frozen at creation; SKILL.md is not. So every one of those duplicated rules was a
+copy that went stale the moment the skill improved, and each improvement then
+required every broker to hand-edit their task. Four releases in a row needed exactly
+that.
+
+Everything that is *method* belongs in the skill, which syncs. Only what is *this
+broker's configuration* belongs here, because it exists nowhere else. The result is a
+prompt that should not need changing again when the skill changes.
 
 ```
-# valutten-broker-briefing prompt v0.9.1 — keep this line
+# valutten-broker-briefing prompt v0.10.0 — keep this line
 
-It's Monday — build this week's industry briefing using the weekly-broker-briefing
-skill. This is an automated run with nobody watching, so proceed without asking
-questions.
+It's Monday. Run the weekly-broker-briefing skill and follow it exactly — it holds
+the current method, and it is newer than this prompt. This is an automated run with
+nobody watching, so proceed without asking questions, and do not stop to confirm
+anything.
 
-The briefing is for <<broker's name>> — use it for {{BROKER_NAME}} in the template.
+My configuration:
+- Name (for the digest header): <<broker's name>>
+- Timezone for all dates: <<e.g. Australia/Brisbane>>
+- Lookback window: the last 7 days
+- Senders to scan, plus a topic search for anything relevant beyond this list:
+  <<paste the sender addresses / domains here>>
 
-Scan the Google Workspace inbox from the last 7 days. KEEP only industry/policy
-signal: rate changes, credit & lending policy changes, regulatory/government news,
-lender service/process updates, aggregator/licensee updates, industry media
-(Momentum Media / The Adviser / Mortgage Business etc.), and events/awards. DROP
-all client- and deal-specific email (pre-approvals, conditional/unconditional
-approvals, application status, valuations, settlements, anything naming one
-borrower or application).
+Two things that must hold even if this prompt and the skill ever disagree: never
+read or quote client email in order to decide whether a sender is client-related,
+and never write to the mailbox — no drafts, no labels, no archiving, no sends.
 
-Senders to scan (plus a topic search for anything relevant beyond this list):
-<<paste the same sender addresses / domains here>>
-
-Deliver one thing: a self-contained interactive HTML digest, grouped by category,
-each item linking back to the original Gmail message (build links as
-https://mail.google.com/mail/u/0/#all/<MESSAGE_ID>) and to any source
-document/website found in the email. Save it as a Cowork artifact — that plus the
-push notification on this task is the whole delivery. Do NOT draft or send an email.
-
-If a Google Drive / file-hosting connector is available, also upload the HTML there
-and put its shareable URL in the template's `.openbar` block, so the briefing opens
-in a real browser. If there is no such URL, delete that block rather than shipping a
-button that goes nowhere.
-
-If any configured sender returns zero results, re-run that sender with in:anywhere
-before concluding there was nothing — a mail filter may be auto-archiving or
-trashing their bulletins. Note in the briefing which senders were only found
-outside the inbox.
-
-If it was a quiet week, still deliver a short "quiet week" briefing rather than
-nothing. Timezone for dates: <<e.g. Australia/Brisbane>>.
+If the weekly-broker-briefing skill is not available in this session, stop and say
+so plainly rather than improvising a briefing from this prompt alone.
 ```
+
+**Why the two safety lines are still duplicated.** Everything else was removed
+precisely because duplication rots. These two stay because their failure mode is
+unacceptable rather than merely untidy: reading client mail to triage senders, and
+writing to a broker's mailbox. If the skill somehow fails to load, a thin prompt
+should produce nothing — not an improvised briefing that breaks the privacy promise.
+That is a deliberate exception to the rule above, not an oversight.
 
 ---
 
@@ -148,33 +151,33 @@ nothing. Timezone for dates: <<e.g. Australia/Brisbane>>.
 Keeps the sender list from going stale. Fires every few months, rescans, and delivers
 a short artifact highlighting what changed. Self-contained (fresh session).
 
+Thin, for the same reason as the weekly one: the method lives in the skill's Setup
+mode (Step 0), which syncs; only the broker's current list is local to this task.
+
 ```
-# valutten-broker-briefing prompt v0.9.1 — keep this line
+# valutten-broker-briefing prompt v0.10.0 — keep this line
 
-It's time for a quarterly recalibration of my weekly industry briefing. This is an
-automated run — proceed without asking questions.
+It's time for the quarterly recalibration of my industry briefing. Run the
+weekly-broker-briefing skill in recalibration mode and follow it exactly — it holds
+the current method. Automated run, nobody watching, so proceed without asking
+questions.
 
-Scan my Google Workspace inbox over the last 90 days and discover the senders
-emailing me, grouped as usual (lenders/banks, aggregator/licensee, industry media,
-events/regulatory, and likely client/deal/noise). Use sender address, domain and
-message count ONLY — do not open, quote or read subject lines while working out who
-is who. My inbox contains client information and it must not be read to make a
-sender-level decision.
+My configuration:
+- Timezone for all dates: <<e.g. Australia/Brisbane>>
+- Discovery window: the last 90 days
+- My CURRENT briefing sender list, to compare against what you find:
+  <<paste the current sender list here>>
 
-Compare what you find against my CURRENT briefing sender list:
-<<paste the current sender list here>>
+Deliver a short artifact flagging senders that are new since this list was built and
+senders that have gone silent, so I can decide whether to refresh it.
 
-Deliver a short HTML artifact titled "Briefing sources — quarterly check", flagging:
-- NEW senders that have appeared and look like signal but aren't on my list yet
-- Current senders that have gone SILENT over the window
-- A one-line prompt telling me to paste my setup prompt to refresh the list if I
-  want to add or drop anything.
+Two things that must hold even if this prompt and the skill ever disagree: discover
+senders from address, domain and message count only — never open, quote or read
+subject lines to decide who a sender is, because my inbox contains client
+information — and never write to the mailbox.
 
-Do not draft or send an email — the artifact plus the push notification on this task
-is the whole delivery.
-
-If nothing has changed, say so in one line rather than padding it out.
-Timezone for dates: <<e.g. Australia/Brisbane>>.
+If the weekly-broker-briefing skill is not available in this session, stop and say so
+plainly rather than improvising.
 ```
 
 ---

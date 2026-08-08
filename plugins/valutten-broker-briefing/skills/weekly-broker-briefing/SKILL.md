@@ -203,6 +203,30 @@ it reads their private inbox, so it can only run where that account is connected
 If the broker already has a sender list they're happy with, skip Step 0 and go
 straight to Step 1.
 
+### Step 0b — Recalibration mode (what the quarterly task runs)
+
+The quarterly scheduled task invokes this by name ("run the weekly-broker-briefing
+skill in recalibration mode"). It is Step 0's discovery half, run unattended, with a
+comparison instead of a briefing. It does **not** produce a digest.
+
+1. Run the same sender discovery as Step 0.2 over the window in the prompt (default
+   90 days). **The same rule applies with no exceptions: address, domain and message
+   count only.** This runs with nobody watching, which makes it the worst possible
+   place to relax it.
+2. Compare what you found against the current sender list embedded in the prompt.
+3. Produce a short artifact with two lists — **new senders** that look like signal
+   but are not on the list, and **current senders that have gone silent** over the
+   window — plus one line telling the broker to run their setup prompt if they want
+   to change anything.
+4. Deliver it exactly as Step 7 delivers a briefing: artifact plus the task's push
+   notification. No email, no mailbox writes.
+5. If nothing has changed, say so in one line. A short honest answer is the correct
+   output, not a failure.
+
+Never apply the changes yourself. Recalibration reports drift; the broker decides
+what to do about it. Silently editing their sender list would change what their
+briefing covers without them ever agreeing to it.
+
 ### Step 1 — Gather the sender list and settings
 
 Collect: the list of senders/domains, the broker's name, and the lookback
@@ -594,13 +618,27 @@ the cron is `0 21 * * 0` (note the day rolls back to Sunday). Recompute for the
 broker's actual zone; if the local→UTC conversion crosses midnight, shift the day
 field too.
 
-**Self-contained prompt with the sender list embedded.** A scheduled run starts a
-fresh session with no memory of this conversation, so the trigger's `prompt` must
-carry everything: the version stamp, instruction to run this skill, the broker's
-name (for `{{BROKER_NAME}}`), the full sender list, the lookback window, and the
-delivery instructions. Build it from the template in `assets/kickoff-prompt.md`
-(the "Scheduled-task version"), with the real values filled in. Set `notifications`
-to `{push:true}` so the broker gets a ping when each week's briefing is ready.
+**A thin prompt carrying configuration only.** A scheduled run starts fresh with no
+memory, so the trigger's `prompt` must carry what exists nowhere else: the version
+stamp, the instruction to run this skill, the broker's name (for `{{BROKER_NAME}}`),
+their sender list, timezone and lookback window. Build it from
+`assets/kickoff-prompt.md` ("Scheduled-task version") and set `notifications` to
+`{push:true}`.
+
+**Do not restate the method in the prompt.** Not the categories, not the delivery
+rules, not the link formats, not the Trash retry. It is tempting — the prompt reads
+as if it should be self-sufficient — but a stored prompt is frozen at creation while
+this file is not, so every rule copied into it becomes a stale duplicate that
+contradicts the skill within a release or two. That is precisely what happened: four
+consecutive releases each required every existing broker to hand-edit their task,
+because the task was carrying its own out-of-date copy of the method.
+
+The division is: **method lives here and syncs; configuration lives in the prompt
+because it is the broker's, not ours.** The only deliberate exceptions are the two
+safety lines in the prompt template — never read client mail to triage senders,
+never write to the mailbox — which are duplicated because their failure mode is
+unacceptable rather than merely untidy, and a thin prompt must fail closed if the
+skill does not load.
 
 **Keep the version-stamp line.** Both scheduled prompts open with
 `# valutten-broker-briefing prompt v<version> — keep this line`. Never strip it when

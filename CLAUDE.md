@@ -109,7 +109,17 @@ Each of these looks like a bug and is not. All were established by observing a r
    read-only design is one dull line in a digest, and under a write-enabled one it is a client's
    approval archived out of a broker's inbox. Also: never put a client name, address or loan
    number in that search query. It is a link that gets screenshotted.
-8. **The colophon feedback line is deliberately on every issue, not just the second.** A
+8. **Scheduled-task prompts carry configuration, never method.** A stored trigger prompt is
+   frozen at creation; the skill is not. So anything restated in the prompt — categories,
+   delivery rules, link formats, retries — becomes a stale duplicate that contradicts the
+   skill within a release or two, and every improvement then requires every broker to
+   hand-edit their task. That happened four releases running. Method lives in SKILL.md and
+   syncs; only the broker's own settings (name, senders, timezone, window) belong in the
+   prompt, because they exist nowhere else. The two safety lines in the prompt template are
+   a deliberate exception: a thin prompt must fail closed if the skill does not load, and
+   the failure modes there — reading client mail to triage senders, writing to the mailbox
+   — are unacceptable rather than merely untidy.
+9. **The colophon feedback line is deliberately on every issue, not just the second.** A
    scheduled run starts fresh and cannot know which week it is, so any "show this on issue 2"
    logic would be guesswork. It is also the only feedback channel that exists: nothing about a
    run is reported to VALUTTEN by design, so a broker who stops reading is invisible unless they
