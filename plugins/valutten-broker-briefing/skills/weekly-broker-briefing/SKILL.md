@@ -102,8 +102,10 @@ mail.** Concretely:
 - Sender discovery uses sender address, domain and volume only. No subjects, no snippets,
   no bodies, no opening messages.
 - Topic searches must carry the negative terms that exclude deal traffic (see Step 2).
-- Anything that turns out to be about one named borrower is dropped on sight, not
-  summarised and not quoted.
+- Anything **about** one named borrower is dropped on sight, not summarised and not
+  quoted. An industry item that only mentions a client in passing keeps its industry
+  substance with the client reference discarded — see Step 2. If you cannot tell
+  which you have, drop it.
 - Nothing is ever transmitted to VALUTTEN. The briefing exists only in the broker's own
   account.
 - The mailbox is never modified. No labels, no archiving, no moving, no marking read,
@@ -220,8 +222,28 @@ cannot sweep in client and deal email. Exclude the transactional vocabulary expl
 
 `newer_than:7d (subject:(rate OR rates OR policy OR serviceability OR "credit policy" OR APRA OR ASIC OR webinar OR award OR conference OR "professional development")) -subject:(approval OR approved OR valuation OR settlement OR settled OR "pre-approval" OR discharge OR payout OR "loan application")`
 
-If a Pass B result turns out to concern one named borrower, **drop it immediately and do
-not summarise it**, even if it also mentions a rate or policy change.
+**Named borrowers: what the message is ABOUT decides it, not what it mentions.**
+
+- If the message **is about** one borrower, deal, property or application — an
+  approval, a valuation, a settlement, a request for more documents — **drop it
+  immediately and do not summarise it**, even if it also mentions a rate or a
+  policy change. A rate quoted for one client is not a rate announcement.
+- If the message is a **genuine industry item that incidentally names a client** —
+  a lender's weekly rate sheet that closes with "congratulations on the Smith
+  settlement", a BDM's policy bulletin with a pleasantry at the end — keep the
+  industry substance and **discard the client reference entirely**. Summarise the
+  rate or the policy only. Never quote, paraphrase, allude to or count the client
+  sentence, and never let a borrower name, address or loan number reach the digest.
+- **When you cannot tell which it is, drop it.** The cost of dropping an industry
+  item is one missing line the broker can still find in their inbox. The cost of
+  keeping a client item is a borrower's name in a document that gets screenshotted
+  and forwarded.
+
+This distinction exists because the earlier blanket rule discarded a lender's entire
+weekly rate sheet whenever someone appended a courtesy line — a real and recurring
+loss. The output guarantee is unchanged: nothing about a named borrower appears in
+the briefing, ever. What changed is that an industry email is no longer thrown away
+for merely containing a pleasantry.
 
 Adjust `newer_than` to the chosen window. Pull the thread/message list from both,
 merge, and drop duplicate message IDs. Then read each candidate with the Gmail
@@ -525,12 +547,27 @@ was degraded rather than wondering where their page went. A run that did all the
 work and then silently produced no output is the worst possible outcome: it burns
 their usage, tells them nothing, and looks exactly like the plugin not working.
 
-**Why no email.** The Gmail connector can only create drafts, never send. A draft
-addressed to yourself lands in the Drafts folder, not the inbox, so it is not
-actually "waiting for you Monday morning" — it is buried in a folder nobody opens,
-and it needs the entire briefing inlined because there is usually no URL to link to.
-The artifact is a better version of the same idea: one pinned place that updates
-weekly. Gmail is still required, but for **reading** the source email, not delivery.
+**Why no email.** Three reasons, in order of durability:
+
+1. **We do not write to the broker's mailbox.** Read-only is the design (see "Before
+   you start") and it is the promise made on the marketing site, in the setup guide,
+   in the setup email and in both READMEs. Drafting is a write.
+2. **A self-addressed message is a worse artifact than an artifact.** It has to inline
+   the entire briefing because there is usually no URL to link to, and it does not
+   update in place — week eleven is the eleventh copy. The Cowork artifact is one
+   pinned location that refreshes, which is what "waiting for you Monday morning"
+   actually needs to mean.
+3. **A draft lands in Drafts, which nobody opens.** It is not in the inbox and it is
+   not waiting anywhere the broker looks.
+
+Note the reason that is deliberately **not** on that list: "the Gmail connector can
+only draft, never send." That was the original justification and it is a fact about
+Gmail rather than a reason. The Microsoft 365 connector holds `Mail.Send`, so on any
+Outlook variant that argument evaporates and the invariant looks arbitrary — which is
+how a well-meaning change reintroduces it. The three reasons above hold on every
+transport. See `references/transport-m365.md`.
+
+Gmail is still required, but for **reading** the source email, not delivery.
 
 Sending the briefing through VALUTTEN's own infrastructure is also ruled out. The
 content is derived from the broker's lender correspondence, and routing it through a

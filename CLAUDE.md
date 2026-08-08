@@ -57,8 +57,13 @@ almost always has an AI policy on top.
   ("Unconditional approval — Smith"), which is exactly how this was got wrong once already.
 - Any keyword or topic search must carry negative terms excluding deal traffic (approval,
   valuation, settlement, discharge, payout, loan application).
-- Anything that turns out to concern one named borrower is dropped on sight, never
-  summarised and never quoted.
+- Anything **about** one named borrower is dropped on sight, never summarised and never
+  quoted. An industry item that merely *mentions* a client in passing (a rate sheet ending
+  "congratulations on the Smith settlement") keeps its industry substance and discards the
+  client reference completely — the blanket version of this rule was throwing away whole
+  lender rate sheets over a courtesy line. When it is unclear which kind you have, drop it.
+  The output guarantee is unchanged either way: no borrower name, address or loan number
+  ever reaches the digest.
 - Nothing is ever transmitted to VALUTTEN. Output exists only in the broker's own account.
 
 **Never write reassurance copy that is true of the output but false of the scan.** "Client
@@ -75,9 +80,15 @@ Each of these looks like a bug and is not. All were established by observing a r
 1. **The digest masthead is a text wordmark, not the logo image.** The Cowork artifact viewer
    blocks external images, so the logo JPG renders as a broken-image glyph exactly where brokers
    read the briefing. Websites use the real logo; artifacts must not.
-2. **No email is sent or drafted.** Delivery is a Cowork artifact plus a push notification. The
-   Gmail connector can only draft, never send, and a self-addressed draft lands in Drafts where
-   nobody looks. Gmail is used to READ sources only.
+2. **No email is sent or drafted.** Delivery is a Cowork artifact plus a push notification.
+   Mail is READ only. The reasons that hold on any transport: we never write to the broker's
+   mailbox (it is the promise made in five places); a self-addressed message must inline the
+   whole briefing and cannot update in place, so week eleven is the eleventh copy, whereas the
+   artifact is one pinned thing that refreshes; and a draft sits in Drafts where nobody looks.
+   Do **not** justify this with "the connector can only draft, never send" — that was the
+   original argument, it is a fact about Gmail rather than a reason, and it is false on
+   Microsoft 365 where the connector holds `Mail.Send`. An invariant defended by an argument
+   that expires gets overturned the moment someone notices.
 3. **Never route briefing content through VALUTTEN infrastructure.** It derives from the broker's
    own lender correspondence and must not leave their account. This is the product's core promise.
 4. **The `.openbar` "Open in your browser" block only ships when a real URL exists** (e.g. an

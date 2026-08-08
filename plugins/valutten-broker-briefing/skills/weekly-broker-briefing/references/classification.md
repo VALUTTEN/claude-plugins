@@ -122,8 +122,21 @@ Awards, and it's a nice one to surface prominently.
 
 ## When unsure
 
-Bias slightly toward KEEP for policy/rate/regulatory material (missing a policy
-change is worse than one extra card), and slightly toward DROP for anything that
-smells client-specific (the broker already handles those in their CRM). If a
-single item is genuinely ambiguous and might be important, keep it but flag it
-briefly in the summary (e.g. "possibly client-specific — surfaced in case").
+The two directions are **not** symmetrical, and it matters which way you lean.
+
+**Bias toward KEEP for policy, rate and regulatory material.** Missing a policy
+change costs the broker one line they could have used. Cheap mistake.
+
+**Bias toward DROP for anything that smells client-specific**, and when you
+genuinely cannot tell, drop it. They already handle those in their CRM, so the cost
+of dropping is close to zero — while the cost of keeping is a borrower's name in a
+document that gets screenshotted and forwarded, in a briefing whose entire promise
+is that this never happens.
+
+Never "surface it in case" with a hedge like "possibly client-specific". There is no
+wording that makes client material safe to publish, and a flagged client item is
+still a client item on the page. Ambiguity resolves to DROP, silently.
+
+(An earlier version of this file advised exactly that hedge. It was wrong, and it
+contradicted both the client data boundary in SKILL.md and the promise made on
+every digest's colophon.)
