@@ -164,8 +164,10 @@ it reads their private inbox, so it can only run where that account is connected
    them to decide a sender is client-transactional means client personal information
    leaves the broker's mailbox for no benefit, since the decision is a sender-level one.
    See "Client data boundary" above. Watch specifically for the
-   Loan Market / aggregator ecosystem (corporate comms, MyCRM/platform notices,
-   compliance, the lender panel) plus the banks, non-banks, industry media
+   broker's own aggregator ecosystem — whichever group they are under (AFG,
+   Connective, Loan Market, LMG, Finsure, Mortgage Choice and so on): corporate
+   comms, the CRM/platform notices, compliance, the lender panel — plus the banks,
+   non-banks, industry media
    (Momentum Media / The Adviser / Mortgage Business / Broker Daily) and event
    organisers.
 
@@ -175,7 +177,7 @@ it reads their private inbox, so it can only run where that account is connected
    to judge; never open one of its emails to find out. Using `references/classification.md`,
    sort the discovered senders into:
    - **Likely signal** (recommend including) — grouped as Lenders/Banks,
-     Aggregator / Loan Market / Licensee, Industry Media, Events, Regulatory.
+     Aggregator / Licensee, Industry Media, Events, Regulatory.
    - **Likely client-transactional / noise** (recommend excluding) — senders whose
      traffic is mostly deal-specific (approvals, valuations, settlements), plus
      obvious personal/marketing/spam.

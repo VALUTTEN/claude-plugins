@@ -6,8 +6,8 @@ don't get buried under client and deal traffic.
 
 ## What it does
 
-Once a week it scans a broker-chosen set of senders (banks, lenders, aggregator /
-Loan Market / licensee channels, industry media like Momentum Media, The Adviser and
+Once a week it scans a broker-chosen set of senders (banks, lenders, their
+aggregator or licensee channels, industry media like Momentum Media, The Adviser and
 Mortgage Business, and event organisers), keeps only the **industry signal** —
 interest-rate changes, credit and lending policy changes, regulatory/government news,
 lender service updates, and industry events/awards — and deliberately **excludes
@@ -76,4 +76,4 @@ variant would need the search steps adapted.
 
 ---
 
-Built for VALUTTEN subscribers. Version 0.9.0.
+Built for VALUTTEN subscribers. Version 0.9.1.

@@ -49,20 +49,21 @@ Set up my weekly industry briefing — this is my first run, so calibrate it aga
 my inbox before configuring anything.
 
 Scan my Google Workspace inbox over the last 60 days and discover every sender that
-emails me, grouped by type: lenders/banks, my aggregator/Loan Market/licensee
-channels, industry media (Momentum Media, The Adviser, Mortgage Business, etc.),
-and event/awards organisers. Separate out the senders that are mostly
-client/deal-specific (approvals, valuations, settlements) or marketing/personal, and
+emails me, grouped by type: lenders/banks, my aggregator/licensee channels,
+industry media (Momentum Media, The Adviser, Mortgage Business, etc.), and
+event/awards organisers. Separate out the senders that are mostly client or
+deal-specific (approvals, valuations, settlements) or marketing/personal, and
 recommend excluding those.
 
 Show me the grouped list — sender and how many emails from each, no subject lines
 and no message contents — with your recommended include/exclude, and let me pick which
 sources belong in my weekly briefing. Do not open or quote any of my emails while
-working out who is who: my inbox contains client information and it should not be read
-to make a sender-level decision. Once I've chosen, save that as my sender list, run a first briefing over
-the last 7 days, and set up the recurring Monday schedule with the list baked in.
+working out who is who: my inbox contains client information and it should not be
+read to make a sender-level decision. Once I've chosen, save that as my sender list,
+run a first briefing over the last 7 days, and set up the recurring Monday schedule
+with the list baked in.
 
-My timezone is <<e.g. Australia/Brisbane>>.
+My name is <<your first name>> and my timezone is <<e.g. Australia/Brisbane>>.
 ```
 
 ---
@@ -101,7 +102,7 @@ This is the `prompt` for the `create_trigger` scheduled task. It repeats the sen
 list and settings because the scheduled session starts fresh. Keep it complete.
 
 ```
-# valutten-broker-briefing prompt v0.9.0 — keep this line
+# valutten-broker-briefing prompt v0.9.1 — keep this line
 
 It's Monday — build this week's industry briefing using the weekly-broker-briefing
 skill. This is an automated run with nobody watching, so proceed without asking
@@ -148,7 +149,7 @@ Keeps the sender list from going stale. Fires every few months, rescans, and del
 a short artifact highlighting what changed. Self-contained (fresh session).
 
 ```
-# valutten-broker-briefing prompt v0.9.0 — keep this line
+# valutten-broker-briefing prompt v0.9.1 — keep this line
 
 It's time for a quarterly recalibration of my weekly industry briefing. This is an
 automated run — proceed without asking questions.
