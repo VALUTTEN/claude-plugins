@@ -1,0 +1,38 @@
+name: checks
+
+# This repo is public and installs auto-sync: a bad push on main reaches every
+# broker with "Sync automatically" on, at their next refresh, with no action from
+# them. There is no staging step between here and a broker's Monday morning, which
+# is why these run on every push rather than only on release.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  release-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Version agreement across marketplace.json, plugin.json, the prompt stamps
+      # and the README; digest template invariants; scheduled prompts still thin and
+      # still carrying their two safety lines; no obvious secrets in a public repo.
+      - name: Release integrity
+        run: node scripts/check-release.mjs
+
+      # Fixture structure for the classification eval: no duplicate ids, every KEEP
+      # category one of the six real ones, required fields present.
+      - name: Classification fixtures
+        run: node plugins/valutten-broker-briefing/skills/weekly-broker-briefing/tests/run-eval.mjs
+
+      # marketplace.json is the catalogue. If it will not parse, nothing installs.
+      - name: JSON parses
+        run: |
+          for f in .claude-plugin/marketplace.json plugins/*/.claude-plugin/plugin.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" || exit 1
+          done
