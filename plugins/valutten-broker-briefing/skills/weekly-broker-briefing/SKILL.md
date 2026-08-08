@@ -311,6 +311,32 @@ category that isn't on this list silently vanishes from the page.
 Note that **industry media and events share one section**. A conference invite, an
 awards night and a Momentum Media article all belong in "Industry News & Events".
 
+### Step 4a — Verify every figure before it goes on the page
+
+A broker acts on this. A wrong rate, a wrong LVR or a wrong effective date is worse
+than no briefing at all, because the digest presents everything with the same
+confidence and they have no way to tell which numbers were read carefully.
+
+So, before assembly, check each summary against its source message:
+
+- **Every number must appear in the source.** Rates, LVR caps, dollar figures,
+  percentages, basis points. If you cannot point at where in the email the figure
+  came from, it does not go in the summary.
+- **Every date must appear in the source.** Never infer an effective date from
+  context, and never convert "from Monday" into a specific date — write what the
+  email said.
+- **Never carry a number across items.** If two lenders both moved rates, the risk
+  is attaching one lender's figure to the other. Re-check each against its own
+  message.
+
+When a figure does not survive that check, **drop the number, keep the item**. Write
+the headline and summary without the specific ("CBA — variable rates changed, see
+the announcement") and let the source link carry the detail. A vaguer true item is
+worth more than a precise wrong one.
+
+Do not report this checking in the digest or the chat summary. It is a quality gate,
+not a feature.
+
 ### Step 5 — Build the clickable source
 
 Every item needs a **source link the broker can click to go straight to the origin** —
@@ -366,6 +392,12 @@ Then search the finished file for `{{` — if anything remains, fix it. The full
 | `{{SUBJECT}}` `{{ONE_LINE_SUMMARY}}` `{{PRIMARY_SOURCE_URL}}` `{{EMAIL_URL}}` `{{SOURCE_NAME}}` `{{DATE}}` `{{EFFECTIVE_DATE}}` | per item, per the template's item comment |
 | `{{PUBLIC_URL}}` | the Drive URL — or delete the whole `.openbar` block (Step 7) |
 | `{{SEEN}}` `{{NEXT_BRIEFING_DATE}}` | quiet-week block only |
+| `{{IMPACT_LINE}}` `{{IMPACT_SOURCE_URL}}` `{{IMPACT_SOURCE_LABEL}}` | commission/clawback item — or delete the whole `.impact` block (Step 6a) |
+| `{{DROPPED_COUNT}}` `{{TIDY_SEARCH_URL}}` `{{TIDY_SEARCH_QUERY}}` | tidy-up block — or delete the whole `.tidy` block (Step 6b) |
+
+The `.impact` and `.tidy` blocks are **optional and conditional**: unlike a category
+section, leaving one in with its placeholders unfilled is not merely untidy, it
+publishes a broken advert and a dead search link. When in doubt, delete the block.
 
 **The issue number.** A scheduled run is a fresh session with no memory of last
 week, so you cannot know the sequence number by reasoning about it. Derive it from
@@ -390,9 +422,61 @@ content is perfect. The same applies to the `<style>` block: use the template's 
 as-is rather than writing your own.
 
 Before saving, verify the finished file actually contains: the masthead
-`class="wordmark"` element, the `utm_source=broker-briefing` parameter, and a
-closing `</footer>`. If any is missing,
-rebuild the page from the template rather than patching it.
+`class="wordmark"` element, the `utm_source=broker-briefing` parameter, the
+`class="feedback"` line, and a closing `</footer>`. If any is missing, rebuild the
+page from the template rather than patching it.
+
+### Step 6a — "What this does to your book" (only when the week earns it)
+
+The template has an `.impact` block just above the colophon. It exists to solve a
+specific problem: the colophon ends the page with a link about commissions, and on a
+digest full of rate changes that reads as an advert rather than a next step.
+
+**Include the block only when the week genuinely contained a commission, clawback,
+trail or remuneration change.** These arrive via aggregators and licensees and are
+already a KEEP category. When one is present:
+
+- Keep the item in its category section as normal.
+- Additionally, fill `{{IMPACT_LINE}}` with one plain sentence on what it means for
+  the broker's income — the change and its direction. "Your aggregator is moving
+  clawback from 24 to 18 months from 1 September, which shortens the window where a
+  refinance costs you the upfront."
+- Fill `{{IMPACT_SOURCE_URL}}` and `{{IMPACT_SOURCE_LABEL}}` with the same source
+  link the item carries.
+
+**When no such item exists, delete the whole `.impact` block.** Do not stretch a rate
+change or a service update into a commission story to create the bridge, and do not
+write a generic line about commissions in general. A manufactured impact line is
+worse than no block: it is the exact advert-in-disguise the block exists to avoid,
+and a broker spots it immediately.
+
+One block, one item. If two commission changes landed, take the one with the larger
+effect on income and leave the other in its category.
+
+### Step 6b — The "tidy up" block (optional, and it never touches their mail)
+
+Brokers often ask whether the briefing can clear deal traffic out of their inbox. It
+cannot and must not — Gmail is read-only here, see "Before you start". But the want
+is reasonable, so the template offers the outcome without the write: a search **they**
+run, and a filter recipe **they** apply, in their own Gmail.
+
+Fill `{{DROPPED_COUNT}}` with how many messages you classified DROP this run, and
+build `{{TIDY_SEARCH_QUERY}}` from the deal vocabulary you actually excluded, scoped
+to the same window — for example:
+
+`newer_than:7d subject:(approval OR approved OR valuation OR settlement OR settled OR "pre-approval" OR discharge OR payout OR "loan application")`
+
+Then `{{TIDY_SEARCH_URL}}` is `https://mail.google.com/mail/u/0/#search/` followed by
+that query, URL-encoded.
+
+Two rules. **Never include a client name, a borrower name, an address or a loan
+number in the query** — it is a link that may be shared or screenshotted, and the
+whole point is that named-borrower material never leaves their mailbox. Keep it to
+generic deal vocabulary. And **delete the block entirely if nothing was dropped**, or
+if the count is trivially small; a tidy-up prompt for two emails is noise.
+
+If a broker asks you directly to move, label or archive the mail, say plainly that
+this plugin does not modify their mailbox by design, and point them at this block.
 
 ### Step 7 — Deliver
 

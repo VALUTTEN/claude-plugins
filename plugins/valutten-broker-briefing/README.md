@@ -76,4 +76,4 @@ variant would need the search steps adapted.
 
 ---
 
-Built for VALUTTEN subscribers. Version 0.7.1.
+Built for VALUTTEN subscribers. Version 0.8.0.

@@ -101,7 +101,7 @@ This is the `prompt` for the `create_trigger` scheduled task. It repeats the sen
 list and settings because the scheduled session starts fresh. Keep it complete.
 
 ```
-# valutten-broker-briefing prompt v0.7.1 — keep this line
+# valutten-broker-briefing prompt v0.8.0 — keep this line
 
 It's Monday — build this week's industry briefing using the weekly-broker-briefing
 skill. This is an automated run with nobody watching, so proceed without asking
@@ -148,7 +148,7 @@ Keeps the sender list from going stale. Fires every few months, rescans, and del
 a short artifact highlighting what changed. Self-contained (fresh session).
 
 ```
-# valutten-broker-briefing prompt v0.7.1 — keep this line
+# valutten-broker-briefing prompt v0.8.0 — keep this line
 
 It's time for a quarterly recalibration of my weekly industry briefing. This is an
 automated run — proceed without asking questions.

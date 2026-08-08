@@ -86,6 +86,23 @@ Each of these looks like a bug and is not. All were established by observing a r
 5. **The masthead and colophon in `digest-template.html` are load-bearing** and must be
    reproduced verbatim in every rendered digest. They are how the briefing is attributed back to
    VALUTTEN; a digest without them is a defect even if the content is perfect.
+6. **The `.impact` ("What this does to your book") block is conditional, and its absence is
+   correct.** It appears only when the week actually contained a commission, clawback or
+   remuneration change. It exists so the colophon's commissions link follows from something on
+   the page instead of reading as an advert. Do not make it unconditional, and never let a run
+   manufacture a money angle to fill it — a stretched impact line is worse than no block,
+   because it is exactly the advert-in-disguise the block was added to remove.
+7. **The `.tidy` block hands the broker a search, never an action.** Brokers ask for the
+   briefing to file or clear their deal email; the answer is a Gmail search link and a filter
+   recipe they apply themselves. Gmail is read-only (see §4) — a misclassification under a
+   read-only design is one dull line in a digest, and under a write-enabled one it is a client's
+   approval archived out of a broker's inbox. Also: never put a client name, address or loan
+   number in that search query. It is a link that gets screenshotted.
+8. **The colophon feedback line is deliberately on every issue, not just the second.** A
+   scheduled run starts fresh and cannot know which week it is, so any "show this on issue 2"
+   logic would be guesswork. It is also the only feedback channel that exists: nothing about a
+   run is reported to VALUTTEN by design, so a broker who stops reading is invisible unless they
+   write in.
 
 ## 6. Verifying changes
 

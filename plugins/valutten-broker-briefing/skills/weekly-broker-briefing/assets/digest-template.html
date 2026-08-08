@@ -182,6 +182,43 @@
     font:10px/1.7 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);
   }
 
+  /* ---------- what this does to your book (commission/remuneration impact) ---------- */
+  .impact{
+    margin:34px 34px 0;padding:22px 24px;
+    border-left:2px solid var(--eff);background:#fbf8f1;
+  }
+  .impact h2{
+    margin:0 0 10px;font:700 10px/1 var(--sans);letter-spacing:.2em;
+    text-transform:uppercase;color:#7a6338;
+  }
+  .impact p{margin:0;font:400 16px/1.6 var(--serif);color:#20262f}
+  .impact p + p{margin-top:9px}
+  .impact .impact-src{font:12px/1.5 var(--sans);letter-spacing:.02em}
+  .impact a{color:var(--signal);text-decoration:none;border-bottom:1px solid rgba(37,99,235,.3)}
+  .impact a:hover{border-bottom-color:var(--signal)}
+
+  /* ---------- tidy up (no-write inbox housekeeping) ---------- */
+  .tidy{
+    margin:30px 34px 0;padding:20px 24px;
+    border:1px solid var(--rule);background:#fcfcfa;
+  }
+  .tidy h2{
+    margin:0 0 8px;font:700 10px/1 var(--sans);letter-spacing:.2em;
+    text-transform:uppercase;color:var(--ink-faint);
+  }
+  .tidy p{margin:0 0 10px;font:13.5px/1.65 var(--sans);color:#3f4855}
+  .tidy a.tidylink{
+    display:inline-block;font:600 12px/1 var(--sans);color:var(--signal);text-decoration:none;
+    border:1px solid rgba(37,99,235,.35);border-radius:2px;padding:9px 14px;
+  }
+  .tidy a.tidylink:hover{background:rgba(37,99,235,.07)}
+  .tidy code{
+    display:block;margin-top:12px;padding:10px 12px;background:#f1efe9;
+    font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#3f4855;
+    word-break:break-all;
+  }
+  .tidy .note{margin-top:10px;margin-bottom:0;font-size:12px;color:var(--ink-faint)}
+
   /* ---------- colophon ---------- */
   .colophon{
     margin-top:40px;background:var(--night);
@@ -203,6 +240,11 @@
     transition:border-color .25s,color .25s,background-color .25s;
   }
   .colophon a.cta:hover{border-color:#8fb3ff;color:#fff;background:rgba(37,99,235,.22)}
+  .colophon .feedback{
+    margin:18px auto 0;max-width:520px;
+    font:12px/1.6 var(--sans);color:#7b869b;
+  }
+  .colophon .feedback a{color:#b9c6dc}
   .colophon .fine{
     margin-top:18px;font:10px/1.7 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#5c687d;
   }
@@ -313,6 +355,38 @@
   </div>
   -->
 
+  <!-- WHAT THIS DOES TO YOUR BOOK. Include ONLY when the week actually contained a
+       commission, clawback, remuneration or trail change (they land in Aggregator &
+       Licensee). This is the bridge that earns the colophon link below: without a
+       real money item on the page, that link is an advert and this block must be
+       DELETED. Never manufacture one to create the bridge. See SKILL.md Step 6a. -->
+  <div class="impact">
+    <h2>What this does to your book</h2>
+    <p>{{IMPACT_LINE}}</p>
+    <p class="impact-src"><a href="{{IMPACT_SOURCE_URL}}">{{IMPACT_SOURCE_LABEL}} &#8599;</a></p>
+  </div>
+
+  <!-- TIDY UP. Optional. The briefing never modifies the mailbox — this block hands
+       the broker a search THEY run and a filter recipe THEY apply, so the tidying is
+       their action in their own Gmail, not ours. Never replace this with anything
+       that labels, archives or moves mail. See SKILL.md, "Gmail is strictly
+       read-only". Delete the block if the run filtered nothing worth tidying. -->
+  <div class="tidy">
+    <h2>Tidy up (optional)</h2>
+    <p>
+      This week the briefing set aside {{DROPPED_COUNT}} deal-specific emails —
+      approvals, valuations, settlements. Nothing was moved or changed. If you want
+      them out of your inbox, this search shows exactly those messages in Gmail:
+    </p>
+    <a class="tidylink" href="{{TIDY_SEARCH_URL}}">Show them in Gmail &#8599;</a>
+    <code>{{TIDY_SEARCH_QUERY}}</code>
+    <p class="note">
+      To do it automatically in future, open that search in Gmail, click the filter
+      icon, then <b>Create filter</b> &rarr; <b>Skip the Inbox</b> and apply a label.
+      Gmail does it from then on — the briefing still reads everything either way.
+    </p>
+  </div>
+
   <!-- DO NOT REMOVE — see comment at top of file. Keep the utm_* parameters intact. -->
   <footer class="colophon">
     <div class="mark">Valutten</div>
@@ -321,6 +395,17 @@
       excluded by design, so nothing about a named borrower appears here.
     </p>
     <a class="cta" href="https://valutten.com/?utm_source=broker-briefing&amp;utm_medium=plugin&amp;utm_campaign=weekly-digest">See your commissions in one place &#8599;</a>
+    <!-- Feedback line. Deliberately stateless: a scheduled run starts fresh and cannot
+         know which week it is, so this appears on every issue rather than trying to
+         fire on the second one. It is the only channel we have — nothing about a run
+         is reported back to VALUTTEN, so a broker who quietly stops reading is
+         invisible to us unless they tell us. Keep it understated. -->
+    <p class="feedback">
+      Missing a source, or something landed that should not have?
+      <a href="mailto:dieter@valutten.com?subject=Broker%20Briefing%20feedback">Tell us</a>
+      — it is read by a person, and nothing about your briefing is sent to us
+      automatically.
+    </p>
     <div class="fine">Weekly Broker Briefing · Issue {{ISSUE_NUMBER}}</div>
   </footer>
 
