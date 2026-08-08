@@ -145,3 +145,10 @@ ids that failed.
 | Date | Change under test | False KEEPs | False DROPs | Category errors | Failed ids |
 |---|---|---|---|---|---|
 | | | | | | |
+
+## Other tests in this directory
+
+- `refresh-mode-test.md` — behavioural test plan for "Refresh an existing schedule".
+  Cannot be run from Claude Code: scheduled tasks are Cowork objects, so it needs a
+  desktop session. Uses a throwaway fixture task rather than a live briefing, because
+  the failure mode of a bad refresh is a mangled schedule.
