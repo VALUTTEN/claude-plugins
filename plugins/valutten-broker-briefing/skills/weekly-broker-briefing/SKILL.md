@@ -158,6 +158,23 @@ it reads their private inbox, so it can only run where that account is connected
    by sender. For each distinct sender collect **only**: the address, the domain, and how
    many emails were received.
 
+   **Use `view: THREAD_VIEW_METADATA_ONLY` on `search_threads`. This is not optional.**
+   The default view is `THREAD_VIEW_MINIMAL`, which returns the subject line and a
+   snippet of every message. That means the default hands you client subject lines
+   whether you want them or not, and the privacy rule degrades into "do not look at
+   what you have already been given" — which is not a control, it is an honour
+   system, and it is unauditable after the fact.
+
+   `THREAD_VIEW_METADATA_ONLY` returns sender, recipients, date and labels, with no
+   subject and no snippet. The client data never enters the context window at all.
+   Verified against a real mailbox on 8 August 2026: the discovery scan produced a
+   correct, usable sender list — industry publishers and aggregator addresses clearly
+   distinguishable from SaaS and billing noise — with zero subject lines returned.
+
+   If you ever find yourself with subject lines during discovery, you have used the
+   wrong view. Stop, discard them, and re-run with the metadata view rather than
+   proceeding carefully around them.
+
    **Do NOT collect, read, quote or display subject lines, snippets or bodies at this
    stage, and do not open messages.** Broker subject lines routinely carry a client's
    name ("Unconditional approval — Smith", "Valuation received — 14 Oak St"). Reading
@@ -290,6 +307,22 @@ use it, and **tell the broker in your chat-side summary which senders were only
 found outside the inbox** — that is a filter they probably want to fix, and it is
 information they cannot get any other way. Do not silently fold the results in as if
 nothing happened.
+
+**Verified against a real mailbox, 8 August 2026.** One sender returned an estimate
+of **1** thread without `in:anywhere` and **201** with it. Same sender, same window.
+That is the size of the hole this retry closes, measured rather than assumed.
+
+Two specifics worth knowing, both established by that test:
+
+- **`in:anywhere` in the query is sufficient.** The `includeTrash: true` parameter on
+  `search_threads` adds nothing on top of it — both together returned the same 201.
+  Use the operator; it travels with the query string.
+- **Seeing `TRASH` in a normal result does NOT mean Trash was searched.** `search_threads`
+  matches at thread level, so a thread that matches on one message returns *all* its
+  messages, trashed ones included. That looks like Trash coverage and is not: the plain
+  query above surfaced trashed messages while still missing 200 threads. Never conclude
+  from the presence of `TRASH` labels that the retry is unnecessary — run it on any
+  zero-result sender regardless.
 
 Be efficient: you don't need the full body of every message — the sender,
 subject, and first chunk of content are usually enough to classify and summarise.

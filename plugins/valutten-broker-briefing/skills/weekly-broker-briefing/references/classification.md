@@ -25,9 +25,20 @@ Everything below is elaboration on that one question.
 ### Interest-rate changes
 Lender rate announcements of any kind: variable rate moves, new/changed fixed
 rates, special/promotional pricing, cashback offers, rate-lock fee changes,
-construction/bridging pricing, commercial or asset-finance rate changes. RBA cash
-rate commentary and the lender responses to it. Repricing notifications that apply
-to a product or the whole book (not a single client's repricing request).
+construction/bridging pricing, commercial or asset-finance rate changes.
+Repricing notifications that apply to a product or the whole book (not a single
+client's repricing request).
+
+**The RBA itself is not a rate change.** An RBA cash rate decision — moved or held —
+goes under **Regulatory & Government**: it is a policy decision by a public
+authority, and on its own it changes nothing about how the broker prices a loan. A
+*lender* moving its rates, whether or not it cites the RBA, is a **Rate Change**.
+Industry *commentary* about what the RBA might do next is **Industry News &
+Events**.
+
+The distinction matters because a decision to hold would otherwise land under "Rate
+Changes" as an item where nothing changed, which is the one place a broker expects
+every line to be actionable. This was ambiguous until an eval run split on it.
 
 ### Credit & lending policy changes
 Serviceability/assessment-rate changes, borrowing-capacity or buffer changes,

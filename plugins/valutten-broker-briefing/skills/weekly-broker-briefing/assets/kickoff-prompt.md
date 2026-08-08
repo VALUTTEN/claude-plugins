@@ -115,7 +115,7 @@ broker's configuration* belongs here, because it exists nowhere else. The result
 prompt that should not need changing again when the skill changes.
 
 ```
-# valutten-broker-briefing prompt v0.10.0 — keep this line
+# valutten-broker-briefing prompt v0.11.0 — keep this line
 
 It's Monday. Run the weekly-broker-briefing skill and follow it exactly — it holds
 the current method, and it is newer than this prompt. This is an automated run with
@@ -155,7 +155,7 @@ Thin, for the same reason as the weekly one: the method lives in the skill's Set
 mode (Step 0), which syncs; only the broker's current list is local to this task.
 
 ```
-# valutten-broker-briefing prompt v0.10.0 — keep this line
+# valutten-broker-briefing prompt v0.11.0 — keep this line
 
 It's time for the quarterly recalibration of my industry briefing. Run the
 weekly-broker-briefing skill in recalibration mode and follow it exactly — it holds

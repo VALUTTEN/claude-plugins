@@ -55,6 +55,12 @@ almost always has an AI policy on top.
 - Sender discovery uses address, domain and message count only. No subject lines, no
   snippets, no bodies, no opening messages. Subject lines carry client names
   ("Unconditional approval — Smith"), which is exactly how this was got wrong once already.
+- **Enforce that with `view: THREAD_VIEW_METADATA_ONLY`, not with instructions.** Gmail's
+  default view returns subject and snippet for every message, so an instruction not to read
+  them arrives after the data is already in context — an honour system, and unauditable.
+  The metadata view returns sender/date/labels only, so the client data is never exposed at
+  all. Verified against a real mailbox 2026-08-08. Any transport we add later needs the
+  equivalent projection before it ships; see `references/transport-m365.md`.
 - Any keyword or topic search must carry negative terms excluding deal traffic (approval,
   valuation, settlement, discharge, payout, loan application).
 - Anything **about** one named borrower is dropped on sight, never summarised and never
